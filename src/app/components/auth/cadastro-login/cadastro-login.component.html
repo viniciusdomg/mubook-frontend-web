@@ -1,7 +1,7 @@
 <main class="flex h-screen m-0">
   <!-- Seção de Login -->
   <section class="flex flex-col justify-center items-start bg-white p-[60px_40px] flex-[0.7] shadow-[var(--shadow-section)]">
-    <form #loginForm="ngForm" class="w-full">
+    <form #loginForm="ngForm" class="w-full" (ngSubmit)="cadastrarUsuario()">
       <!-- Nome do site -->
       <h1 class="text-[28px] font-bold mb-[30px] text-[var(--color-primary)] relative left-[38%] w-fit
            transition-all duration-500 hover:scale-105 hover:text-[var(--color-accent)]
@@ -22,6 +22,7 @@
             <input
               type="email"
               name="email"
+              [(ngModel)]="usuarioModel.email"
               placeholder="alex@gmail.com"
               required
               class="w-full py-3 px-4 pr-12 border-none bg-[var(--color-input-bg)] rounded text-sm focus:outline-none"
@@ -35,11 +36,12 @@
         </div>
 
         <div class="input-group">
-          <label class="block text-xs text-[var(--color-text-gray)] mb-2 font-medium">Email</label>
+          <label class="block text-xs text-[var(--color-text-gray)] mb-2 font-medium">Nome completo</label>
           <div class="relative flex items-stretch">
             <input
               type="text"
               name="nome"
+              [(ngModel)]="usuarioModel.nome"
               placeholder="Informe seu nome completo"
               required
               class="w-full py-3 px-4 pr-12 border-none bg-[var(--color-input-bg)] rounded text-sm focus:outline-none"
@@ -60,6 +62,7 @@
               #senhaInput
               type="password"
               name="password"
+              [(ngModel)]="usuarioModel.senha"
               placeholder="Informe sua senha"
               required
               class="w-full py-3 px-4 pr-12 border-none bg-[var(--color-input-bg)] rounded text-sm focus:outline-none"
@@ -72,7 +75,7 @@
               </div>
             </div>
           </div>
-          <a routerLink="" class="absolute right-0 top-full text-xs mt-3 text-[var(--color-link)] no-underline hover:underline">
+          <a routerLink="/" class="absolute right-0 top-full text-xs mt-3 text-[var(--color-link)] no-underline hover:underline">
             Já é cadastrado? Faça login
           </a>
         </div>
