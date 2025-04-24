@@ -21,9 +21,6 @@
   --shadow-button: 0 5px 10px rgba(92, 46, 198, 0.3);
   --shadow-section: 1px 0 10px rgba(0, 0, 0, 0.05);
 
-  /* Opacidade automática */
-  --color-primary-500: rgb(92 46 190 / <alpha-value>);
-  --color-accent-500: rgb(138 43 226 / <alpha-value>);
 }
 
 html, body { height: 100%; }
