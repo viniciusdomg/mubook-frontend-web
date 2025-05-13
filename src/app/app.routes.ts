@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import {LoginComponent} from './components/auth/login/login.component';
-import {CadastroLoginComponent} from './components/auth/cadastro-login/cadastro-login.component';
+import {EsqueceuSenhaComponent} from './components/auth/cadastro-login/esqueceu-senha.component';
 import {HomeComponent} from './home/home.component';
 
 export const routes: Routes = [
@@ -9,8 +9,8 @@ export const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: 'fazer_cadastro',
-    component: CadastroLoginComponent
+    path: 'esqueceu_senha',
+    component: EsqueceuSenhaComponent
   },
   {
     path: 'home',

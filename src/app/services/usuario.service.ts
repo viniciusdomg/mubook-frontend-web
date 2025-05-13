@@ -25,8 +25,8 @@ export class UsuarioService {
     return this.http.put<UsuarioModel>(`${this.apiUrl}/${usuario.id}`, { usuario });
   }
 
-  trocarSenha(id: number, novaSenha: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${id}/trocar_senha`, { senha: novaSenha });
+  solicitarRedefinicaoSenha(email: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/password`, { email });
   }
 
   deletar(id: number): Observable<any> {
