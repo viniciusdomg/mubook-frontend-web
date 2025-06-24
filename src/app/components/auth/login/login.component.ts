@@ -3,6 +3,7 @@ import {Router, RouterLink} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import {AuthRequestModel} from '../../../models/auth/auth.request.model';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +13,11 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
+  auth: AuthRequestModel = {
+    user: '',
+    password: ''
+  };
+
   senhaVisivel = false;
   erroLogin: string | null = null;
 
@@ -25,8 +29,8 @@ export class LoginComponent {
   }
 
   login() {
-    this.authService.login(this.email, this.password).subscribe({
-      next: () => this.router.navigate(['/']),
+    this.authService.login(this.auth).subscribe({
+      next: () => this.router.navigate(['']),
       error: (err) => {
         this.erroLogin = 'Email ou senha inválidos';
         console.error(err);

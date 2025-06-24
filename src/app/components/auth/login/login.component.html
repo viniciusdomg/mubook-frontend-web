@@ -17,10 +17,10 @@
             <label class="block text-xs text-[var(--color-text-gray)] mb-2 font-medium">Email</label>
             <div class="relative flex items-stretch">
               <input
-                type="email"
-                name="email"
-                [(ngModel)]="email"
-                placeholder="Informe seu email"
+                type="text"
+                name="user"
+                [(ngModel)]="auth.user"
+                placeholder="Informe seu email ou CPF"
                 required
                 class="w-full py-3 px-4 pr-12 border-none bg-[var(--color-input-bg)] rounded text-sm focus:outline-none"
               />
@@ -40,7 +40,7 @@
                 #senhaInput
                 type="password"
                 name="password"
-                [(ngModel)]="password"
+                [(ngModel)]="auth.password"
                 placeholder="Informe sua senha"
                 required
                 class="w-full py-3 px-4 pr-12 border-none bg-[var(--color-input-bg)] rounded text-sm focus:outline-none"
@@ -61,9 +61,13 @@
           </div>
 
           <!-- Botão de Login -->
-          <button type="submit" class="w-full h-11 py-4 mt-6 bg-[var(--color-primary)] text-white font-semibold rounded-lg text-sm cursor-pointer border-none shadow-[var(--shadow-button)] hover:bg-[var(--color-primary-hover)] transition-colors flex items-center justify-center">
+          <button
+            type="submit"
+            class="w-full h-11 py-4 mt-6 bg-[var(--color-primary)] text-white font-semibold rounded-lg text-sm cursor-pointer border-none shadow-[var(--shadow-button)] hover:bg-[var(--color-primary-hover)] transition-all duration-150 transform active:scale-95 active:shadow-inner flex items-center justify-center"
+          >
             Sign In Now
           </button>
+
 
         </div>
       </form>
