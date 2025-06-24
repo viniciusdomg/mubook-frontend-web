@@ -1,0 +1,77 @@
+*{
+    box-sizing: border-box;
+}
+
+mat-sidenav-container {
+    height: 100%;
+}
+
+mat-sidenav-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main_sidenav {
+    padding-top: 25px;
+    height: 70%;
+    width: 20%;
+}
+
+.main_header {
+    height: 111px;
+}
+
+.sidenav_button {
+    margin-top: 30px;
+    width: 200px;
+    justify-content: start;
+}
+
+.sidenav_button {
+    display: flex;
+    margin-top: 20px;
+    width: 70%;
+    justify-content: space-between;
+    font-size: 0.9vw;
+    
+}
+
+.sidenav_button i{
+    margin-right: 8px;
+    font-size: 1.2vw;
+}
+
+
+li button.sidenav_button,
+li button.sidenav_button i {
+    color: black;
+}
+
+.sidenav_button.active:hover::before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: -35px;
+    width: 8px;
+    background-color: rgba(109, 113, 255, 1);
+    border-radius: 10px;
+}
+
+li button.sidenav_button:hover,
+li button.sidenav_button:hover i {
+    color: rgba(109, 113, 255, 1);
+    font-weight: bolder;
+}
+
+.user_sidenav_name {
+    font-size: 3vw;
+    font-weight: 900;
+}
+
+.sidenav_slogan{
+    font-size: 1.1vw;
+    color: gray;
+    padding-bottom: 20px;
+}

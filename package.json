@@ -1,6 +1,6 @@
 {
   "name": "mu-book",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -24,6 +24,7 @@
     "jwt-decode": "^4.0.0",
     "ngx-sweetalert2": "^0.2.7",
     "postcss": "^8.5.3",
+    "bootstrap": "^5.3.5",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.19.1",
     "tailwindcss": "^4.1.4",
@@ -42,6 +43,8 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4",
     "typescript": "~5.7.2"
   }
 }
