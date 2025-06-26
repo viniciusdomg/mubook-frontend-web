@@ -1,0 +1,8 @@
+.conteudo {
+  background-color: #f3f2f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(80vh - 60px);
+  margin-left: 245px;
+}
