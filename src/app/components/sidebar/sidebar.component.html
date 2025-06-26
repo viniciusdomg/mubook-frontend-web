@@ -1,28 +1,22 @@
-<mat-sidenav-container>
-
-    <mat-sidenav #sidenav mode="side" opened class="main_sidenav">
-
-        <ul>
-            <li><label class="user_sidenav_name">Nome</label></li>
-            <li><label class="sidenav_slogan">Seu jogo, sua quadra, sua reserva!</label></li>
-        </ul>
-
-        <ul>
-            <li class="item"><button mat-button class="sidenav_button active"><i class="bi bi-house"></i> Home</button>
-            </li>
-            <li><button mat-button class="sidenav_button active"><i class="bi bi-person"></i> Perfil</button></li>
-            <li><button mat-button class="sidenav_button active"><i class="bi bi-calendar"></i> Quadro de
-                    Reservas</button></li>
-            <li><button mat-button class="sidenav_button active"><i class="bi bi-pencil"></i> Gerenciar Quadras</button>
-            </li>
-            <li><button mat-button class="sidenav_button active"><i class="bi bi-people"></i> Gerenciar
-                    Usuários</button></li>
-            <li><button mat-button class="sidenav_button active"><i class="bi bi-cup-hot"></i> Definição de
-                    Horários</button></li>
-        </ul>
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-        <ng-content></ng-content>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+<div class="menu">
+  <div class="cabecalho">
+    <h2 class="titulo">Mubook</h2>
+    <p class="frase">Pronto para o próximo jogo?</p>
+  </div>
+  <div class="opitions">
+    <a routerLink="/menu"><i class="bi bi-house"></i> Dashboard</a>
+    <a routerLink="/menu"><i class="bi bi-book"></i> Quadro de Reservas</a>
+    <a routerLink="."><i class="bi bi-calendar-check"></i> Gestão de Quadras</a>
+    <a routerLink="/menu" class="menu-item" (click)="toggleSubmenu($event)">
+      <i class="bi bi-people"></i> Gerenciar
+    </a>
+    <div class="submenu">
+      <a routerLink="/menu">Administradores</a>
+      <a routerLink="/menu">Sócios</a>
+    </div>
+    <a routerLink="/menu"><i class="bi bi-clock"></i> Definição de Horários</a>
+    <a routerLink="/menu">
+      <i class="bi bi-bar-chart-line"></i> Relatórios e Estatísticas
+    </a>
+  </div>
+</div>

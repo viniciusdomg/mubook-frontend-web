@@ -1,16 +1,30 @@
-<header class="main_header">
-    <div class="header_container">
-        <div class="main_page_text">
-            <label class="main_text">Nome da pagina</label>
-        </div>
-        <div class="user_details">
-            <i class="bi bi-bell header_icons"></i>
-            <i class="bi bi-person-circle header_icons"></i>
-            <ul>
-                <li>Nome da pessoa</li>
-                <li>Tipo da pessoa</li>
-            </ul>
-            <i class="bi bi-arrow-down-short"></i>
-        </div>
+<div class="navbar">
+  <div class="notificacao">
+    <i class="bi bi-bell"></i>
+  </div>
+
+  <div class="perfil">
+    <div class="upload-container">
+      <input type="file" id="fileInput" accept="image/*" />
+      <label for="fileInput">
+        <i class="bi bi-camera"></i>
+      </label>
     </div>
-</header>
+
+    <div class="info">
+      <p class="name">Nome</p>
+      <p class="gerenciar">Admin</p>
+    </div>
+
+    <div class="dropdown-toggle">
+      <button (click)="toggleDropdown($event)">
+        <i class="bi bi-caret-down-fill"></i>
+      </button>
+    </div>
+
+    <div class="dropdown-menu" [class.ativo]="dropdownAtivo">
+      <a >Perfil</a>
+      <a (click)="logout()">Sair</a>
+    </div>
+  </div>
+</div>

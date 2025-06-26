@@ -1,77 +1,98 @@
 *{
-    box-sizing: border-box;
+  background-color: #ffffff;
+}
+.menu {
+  width: 242px;
+  height: 100vh;
+  background-color:#ffffff;
+  padding: 20px;
+  box-sizing: border-box;
+  border-right: 1px solid #C4BEBE;
+  position: fixed;
+  text-align: center;
 }
 
-mat-sidenav-container {
-    height: 100%;
+.cabecalho h2 {
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.9rem;
+  margin-top: 30px;
 }
 
-mat-sidenav-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+.titulo {
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: bold;
+  background-image: linear-gradient(
+    90deg,
+    #8488fe,
+    #a0a3ff,
+    #c2c4ff,
+    #a0a3ff,
+    #8488fe
+  );
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.5s ease;
 }
 
-.main_sidenav {
-    padding-top: 25px;
-    height: 70%;
-    width: 20%;
+.titulo:hover {
+  animation: onda 1.5s ease-in-out forwards;
 }
 
-.main_header {
-    height: 111px;
+@keyframes onda {
+  0% {
+    background-position: 0 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
 }
 
-.sidenav_button {
-    margin-top: 30px;
-    width: 200px;
-    justify-content: start;
+.cabecalho p {
+  font-size: 12px;
+  margin-bottom: 40px;
+  color: #b7b7b9;
+  font-family: 'Inter', sans-serif;
 }
 
-.sidenav_button {
-    display: flex;
-    margin-top: 20px;
-    width: 70%;
-    justify-content: space-between;
-    font-size: 0.9vw;
-    
+.opitions a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: #333;
+  padding: 8px;
+  margin-bottom: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.sidenav_button i{
-    margin-right: 8px;
-    font-size: 1.2vw;
+.opitions i {
+  font-size: 1.2rem;
 }
 
-
-li button.sidenav_button,
-li button.sidenav_button i {
-    color: black;
+.opitions a:hover {
+  background-color: #ececfe;
+  color: #8488fe;
+  border-radius: 5px;
+  transform: scale(1.03);
 }
 
-.sidenav_button.active:hover::before {
-    content: '';
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: -35px;
-    width: 8px;
-    background-color: rgba(109, 113, 255, 1);
-    border-radius: 10px;
+.opitions a:hover i {
+  color: #8488fe;
+  background-color: transparent;
 }
 
-li button.sidenav_button:hover,
-li button.sidenav_button:hover i {
-    color: rgba(109, 113, 255, 1);
-    font-weight: bolder;
+.submenu {
+  display: none;
+  flex-direction: column;
+  padding-left: 30px;
+  gap: 5px;
 }
 
-.user_sidenav_name {
-    font-size: 3vw;
-    font-weight: 900;
-}
-
-.sidenav_slogan{
-    font-size: 1.1vw;
-    color: gray;
-    padding-bottom: 20px;
+.menu-item.ativo + .submenu {
+  display: flex;
 }
