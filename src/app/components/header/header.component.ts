@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth/auth.service';
 import {NgClass, NgIf} from '@angular/common';
+
 import {
   trigger, state, style, transition, animate
 } from '@angular/animations';
@@ -10,7 +11,7 @@ import {
 @Component({
   selector: 'app-header',
   imports: [
-    NgClass,
+    // NgClass,
     NgIf,
     // RouterLink
   ],
@@ -20,10 +21,10 @@ import {
     trigger('fadeSlide', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(-10px)' }),
-        animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
       ]),
       transition(':leave', [
-        animate('150ms ease-in', style({ opacity: 0, transform: 'translateY(-10px)' }))
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(-10px)' }))
       ]),
     ]),
     trigger('rotateIcon', [
@@ -43,6 +44,16 @@ export class HeaderComponent {
   toggleDropdown(event: Event): void {
     event.preventDefault();
     this.dropdownAtivo = !this.dropdownAtivo;
+  }
+
+  // @HostListener('document:click', ['$event'])
+  // onDocumentClick(event: MouseEvent) {
+  //   this.dropdownAtivo = false;
+  // }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.dropdownAtivo = false;
   }
 
   logout() {
