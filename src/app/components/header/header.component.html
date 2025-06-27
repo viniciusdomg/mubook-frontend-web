@@ -1,30 +1,34 @@
-<div class="navbar">
-  <div class="notificacao">
-    <i class="bi bi-bell"></i>
-  </div>
-
-  <div class="perfil">
-    <div class="upload-container">
-      <input type="file" id="fileInput" accept="image/*" />
-      <label for="fileInput">
-        <i class="bi bi-camera"></i>
-      </label>
+<div class="navbar fixed top-0 left-[242px] w-[calc(100%-242px)] flex justify-end items-center bg-white border-b border-[#C4BEBE] p-4 z-50 ">
+  <div class="ml-auto flex items-center gap-3">
+    <!-- Notificação -->
+    <div class="bg-[#ececfe] p-2 rounded-lg hover:bg-[#dcdcff] transition-colors duration-300 cursor-pointer flex">
+      <i class="bi bi-bell text-[#8a8de6] hover:text-[#5f61c4] transition-all duration-300 transform hover:scale-110"></i>
     </div>
 
-    <div class="info">
-      <p class="name">Nome</p>
-      <p class="gerenciar">Admin</p>
+    <!-- Upload -->
+    <label for="fileInput"
+           class="w-10 h-10 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:text-black transition duration-200">
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+      <i class="bi bi-camera text-xl text-gray-500 m-0 p-0 leading-none relative top-[5px] left-[8px]"></i>
+    </label>
+
+    <!-- Info -->
+    <div class="font-[Inter] flex flex-col">
+      <p class="mb-1 text-sm font-semibold">Nome</p>
+      <p class="mb-1 text-xs text-[#b7b7b9]">Admin</p>
     </div>
 
-    <div class="dropdown-toggle">
-      <button (click)="toggleDropdown($event)">
-        <i class="bi bi-caret-down-fill"></i>
+    <!-- Dropdown Toggle -->
+    <div class="relative">
+      <button (click)="toggleDropdown($event)" class="focus:outline-none transition-transform duration-300">
+        <i [ngClass]="dropdownAtivo ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'" class="text-gray-700 text-lg transition-all duration-300"></i>
       </button>
-    </div>
 
-    <div class="dropdown-menu" [class.ativo]="dropdownAtivo">
-      <a >Perfil</a>
-      <a (click)="logout()">Sair</a>
+      <!-- Dropdown Menu -->
+      <div *ngIf="dropdownAtivo" [@fadeSlide] class="absolute top-full right-0 mt-2 bg-white shadow-lg rounded-md py-2 w-[150px] font-[Inter] z-50 transition-all duration-300">
+        <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-[#ececfe] hover:text-[#5f61c4] transition-all duration-200">Perfil</a>
+        <a href="#" (click)="logout()" class="block px-4 py-2 text-sm text-gray-800 hover:bg-[#ececfe] hover:text-[#5f61c4] transition-all duration-200">Sair</a>
+      </div>
     </div>
   </div>
 </div>
