@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
-import { UsuarioModel } from '../models/usuario.model';
+import { UsuarioModel } from '../../models/usuario.model';
 import { Observable, tap } from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
-import {AuthRequestModel} from '../models/auth/auth.request.model';
-import {AuthResponseModel} from '../models/auth/auth.response.model';
+import {AuthRequestModel} from '../../models/auth/auth.request.model';
+import {AuthResponseModel} from '../../models/auth/auth.response.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

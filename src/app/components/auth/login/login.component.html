@@ -9,12 +9,12 @@
           MuBook
         </h1>
 
-        <h2 class="text-[22px] font-semibold mb-[50px] relative left-[42%]">Sign In</h2>
+        <h2 class="text-[22px] font-semibold mb-[50px] relative left-[43%]">Sign In</h2>
 
-        <div class="space-y-4">
+        <div class="space-y-4 mt-5">
           <!-- Campo de Email -->
-          <div class="input-group">
-            <label class="block text-xs text-[var(--color-text-gray)] mb-2 font-medium">Email</label>
+          <div class="input-group flex flex-col gap-2">
+            <label class="block text-xs text-[var(--color-text-gray)] mb-2 font-medium">Email ou CPF</label>
             <div class="relative flex items-stretch">
               <input
                 type="text"
@@ -33,7 +33,7 @@
           </div>
 
           <!-- Campo de Senha -->
-          <div class="input-group relative">
+          <div class="input-group flex flex-col gap-2">
             <label class="block text-xs text-[var(--color-text-gray)] mb-2 font-medium">Senha</label>
             <div class="relative flex items-stretch">
               <input
@@ -53,11 +53,12 @@
                 </div>
               </div>
             </div>
-            <div class="flex items-end justify-end mt-3"  >
-              <a routerLink="/esqueceu_senha" class="right-0 top-full text-xs text-[var(--color-link)] no-underline hover:underline">
-                Esqueceu a senha?
-              </a>
-            </div>
+          </div>
+
+          <div class="flex items-end justify-end mt-3"  >
+            <a routerLink="/esqueceu_senha" class="right-0 top-full text-xs text-[var(--color-link)] no-underline hover:underline">
+              Esqueceu a senha?
+            </a>
           </div>
 
           <!-- Botão de Login -->
@@ -68,7 +69,6 @@
             Sign In Now
           </button>
 
-
         </div>
       </form>
     </section>
@@ -76,7 +76,8 @@
     <!-- Seção da Imagem -->
     <section class="flex-[1.5] flex flex-col justify-center items-center p-10 bg-[var(--color-section-bg)] relative">
       <div class="relative max-w-[600px]">
-        <img src="assets/images/imagem-quadra.png" alt="Quadra Esportiva" class="block w-full h-auto" />
+        <img ngSrc="assets/images/imagem-quadra.png" alt="Quadra Esportiva" class="block w-full h-auto" height="1216"
+             width="1804"/>
       </div>
       <p class="mt-[30px] text-sm text-[var(--color-slogan)] text-center">
         Reserve sua quadra com facilidade e garanta o seu jogo!
