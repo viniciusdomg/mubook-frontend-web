@@ -1,0 +1,75 @@
+<p class="ml-[150px] text-2xl mb-[40px]">Quadras</p>
+
+<div class="ml-[150px] flex items-center gap-4 mb-[120px]">
+  <p class="text-lg text-gray-700">Tipo de quadra:</p>
+  
+  <select
+    [(ngModel)]="quadraSelecionada"
+    class="border border-gray-300 rounded px-4 py-2 w-[280px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
+  >
+    <option value="" disabled selected>Selecione o tipo de quadra</option>
+    <option value="futsal">Futsal</option>
+    <option value="volei">Vôlei</option>
+    <option value="basquete">Basquete</option>
+    <option value="tenis">Tênis</option>
+    <option value="areia">Areia</option>
+  </select>
+</div>
+
+<div class="flex items-center justify-center gap-6 mt-10">
+
+  <button (click)="goPrev()" class="p-2 bg-gray-200 rounded">←</button>
+  <!-- Card anterior -->
+<div
+  class="w-[220px] h-[150px] bg-white border border-gray-300 shadow-md flex cursor-pointer opacity-60 scale-90 transition"
+  (click)="setActive(prevIndex())"
+>
+  <div class="p-2 flex flex-col justify-center">
+    <p style="font-size: 12px; margin-bottom: 40px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].capMaxima }}</p>
+    <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[nextIndex()].tipo }}</p>
+    <p style="font-size: 12px;"><strong>Tamanho:</strong> {{ items[nextIndex()].tamanho }}</p>
+  </div>
+  <img
+    [src]="'assets/images/' + items[prevIndex()].imagem"
+    alt="Imagem"
+    class="w-[100px] h-full object-cover rounded-r"
+  />
+</div>
+
+<!-- Card ativo -->
+<div
+  class="w-[680px] h-[370px] bg-white border border-red-500 shadow-lg flex cursor-default transition"
+>
+    <div class="p-6 flex flex-col justify-start text-lg h-full">
+    <p style="margin-bottom: 150px;" class="text-sm">
+        <strong>Capacidade Máxima:</strong> {{ items[activeIndex].capMaxima }}
+    </p>
+    <p class="text-2xl"><strong>Tipo da Quadra:</strong> {{ items[activeIndex].tipo }}</p>
+    <p><strong>Tamanho:</strong> {{ items[activeIndex].tamanho }}</p>
+    </div>
+  <img
+    [src]="'assets/images/' + items[activeIndex].imagem"
+    alt="Imagem"
+    class="w-[400px] h-full object-cover rounded-r"
+  />
+</div>
+
+
+<!-- Card próximo -->
+<div
+  class="w-[220px] h-[150px] bg-white border border-gray-300 shadow-md flex cursor-pointer opacity-60 scale-90 transition"
+  (click)="setActive(nextIndex())"
+>
+  <div class="p-2 flex flex-col justify-center">
+    <p style="font-size: 12px; margin-bottom: 40px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].capMaxima }}</p>
+    <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[nextIndex()].tipo }}</p>
+    <p style="font-size: 12px;"><strong>Tamanho:</strong> {{ items[nextIndex()].tamanho }}</p>
+  </div>
+  <img
+    [src]="'assets/images/' + items[nextIndex()].imagem"
+    alt="Imagem"
+    class="w-[100px] h-full object-cover rounded-r"
+  />
+</div>
+  <button (click)="goNext()" class="p-2 bg-gray-200 rounded">→</button>
+
