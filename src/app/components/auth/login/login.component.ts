@@ -29,7 +29,7 @@ export class LoginComponent {
   }
 
   login() {
-    this.authService.login(this.auth).subscribe({
+      this.authService.login(this.auth).subscribe({
       next: () => this.router.navigate(['/home']),
       error: (err) => {
         this.erroLogin = 'Email ou senha inválidos';

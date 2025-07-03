@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { RouterLink } from '@angular/router';
 // import { NgClass } from '@angular/common';
-import { UsuarioModel } from '../../../models/usuario.model';
+import { UsuarioRequestModel } from '../../../models/gerenciar-usuarios/usuario.request.model';
 import { UsuarioService } from '../../../services/usuario.service';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2';
@@ -22,7 +22,7 @@ import Swal from 'sweetalert2';
 export class EsqueceuSenhaComponent {
 
   // @ts-ignore
-  usuarioModel: UsuarioModel = {
+  usuarioModel: UsuarioRequestModel = {
     email: '',
   };
 

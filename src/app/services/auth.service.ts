@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
-import { UsuarioModel } from '../models/usuario.model';
+import { UsuarioRequestModel } from '../models/gerenciar-usuarios/usuario.request.model';
 import { Observable, tap } from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import {AuthRequestModel} from '../models/auth/auth.request.model';
@@ -30,7 +30,7 @@ export class AuthService {
     localStorage.removeItem('usuario');
   }
 
-  getUsuario(): UsuarioModel | null {
+  getUsuario(): UsuarioRequestModel | null {
     const data = localStorage.getItem('usuario');
     return data ? JSON.parse(data) : null;
   }

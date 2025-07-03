@@ -5,6 +5,7 @@ import {HomeComponent} from './components/home/home.component';
 import {AuthGuard} from './services/authentication/auth.guard';
 import {AuthLayoutComponent} from './layout/auth-layout/auth-layout.component';
 import {MainLayoutComponent} from './layout/main-layout/main-layout.component';
+import {GerenciarUsuariosComponent} from './components/gerenciar-usuarios/gerenciar-usuarios.component';
 
 export const routes: Routes = [
   {
@@ -13,6 +14,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+      { path: 'gerenciar-usuarios', component: GerenciarUsuariosComponent, canActivate: [AuthGuard] },
       // { path: 'perfil', component: PerfilComponent },
     ]
   },

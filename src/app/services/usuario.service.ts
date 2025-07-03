@@ -1,35 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UsuarioModel } from '../models/usuario.model';
+import { UsuarioRequestModel } from '../models/gerenciar-usuarios/usuario.request.model';
 import { Observable } from 'rxjs';
+import {PageResponseModel} from '../models/page.response.model';
+import {UsuarioResponseModel} from '../models/gerenciar-usuarios/usuario.response.model';
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:3000/usuarios';
+  private apiUrl = 'http://localhost:8080/api/usuario';
 
   constructor(private http: HttpClient) {}
 
-  todosUsuarios(): Observable<UsuarioModel[]>{
-    return this.http.get<UsuarioModel[]>(`${this.apiUrl}`);
+  pageUsuarios(offset: number, limit: number, filters: any) {
+    const params : any ={
+      offset: offset,
+      limit: limit,
+    }
+    if(filters) params.filters = filters;
+
+    return this.http.get<PageResponseModel<UsuarioResponseModel>>(`${this.apiUrl}`, {params});
   }
 
-  cadastrar(usuario: UsuarioModel): Observable<UsuarioModel> {
-    return this.http.post<UsuarioModel>(`${this.apiUrl}`, { usuario });
+  cadastrar(usuario: UsuarioRequestModel){
+    return this.http.post<UsuarioRequestModel>(`${this.apiUrl}`, { usuario });
   }
 
-  buscarPorId(id: number): Observable<UsuarioModel> {
-    return this.http.get<UsuarioModel>(`${this.apiUrl}/${id}`);
+  buscarPorId(id: number) {
+    return this.http.get<UsuarioRequestModel>(`${this.apiUrl}/${id}`);
   }
 
-  atualizar(usuario: UsuarioModel): Observable<UsuarioModel> {
-    return this.http.put<UsuarioModel>(`${this.apiUrl}/${usuario.id}`, { usuario });
-  }
+  // atualizar(usuario: UsuarioRequestModel): Observable<UsuarioRequestModel> {
+  //   return this.http.put<UsuarioRequestModel>(`${this.apiUrl}/${usuario.id}`, { usuario });
+  // }
 
   solicitarRedefinicaoSenha(email: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/password`, { email });
   }
 
-  deletar(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
-  }
+  // deletar(id: number): Observable<any> {
+  //   return this.http.delete(`${this.apiUrl}/${id}`);
+  // }
 }
