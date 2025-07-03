@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth/auth.service';
 import {AuthRequestModel} from '../../../models/auth/auth.request.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, NgOptimizedImage],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
