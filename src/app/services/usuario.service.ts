@@ -16,13 +16,17 @@ export class UsuarioService {
       offset: offset,
       limit: limit,
     }
-    if(filters) params.filters = filters;
+    if (filters) {
+      if (filters.nome) params.nome = filters.nome;
+      if (filters.cpf) params.cpf = filters.cpf;
+      if (filters.genero) params.genero = filters.genero;
+    }
 
     return this.http.get<PageResponseModel<UsuarioResponseModel>>(`${this.apiUrl}`, {params});
   }
 
   cadastrar(usuario: UsuarioRequestModel){
-    return this.http.post<UsuarioRequestModel>(`${this.apiUrl}`, { usuario });
+    return this.http.post<UsuarioRequestModel>(`${this.apiUrl}`, { ...usuario });
   }
 
   buscarPorId(id: number) {
@@ -40,4 +44,8 @@ export class UsuarioService {
   // deletar(id: number): Observable<any> {
   //   return this.http.delete(`${this.apiUrl}/${id}`);
   // }
+
+  deleteSelect(ids: number[]): Observable<any> {
+    return this.http.request('delete', `${this.apiUrl}/all`, { body: ids });
+  }
 }

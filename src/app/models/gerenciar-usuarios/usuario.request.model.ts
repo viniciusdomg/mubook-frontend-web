@@ -4,5 +4,10 @@ export interface UsuarioRequestModel {
   cpf: string;
   email: string;
   senha: string;
-  tipo: 'socio' | 'administrador';
+  tipo: string;
 }
+
+export const USER_ROLES = [
+  { label: 'Administrador', value: 'ROLE_ADMINISTRADOR' },
+  { label: 'Associado', value: 'ROLE_ASSOCIADO' }
+];

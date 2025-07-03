@@ -1,125 +1,72 @@
-<div class="p-6">
-  <h2 class="text-2xl font-semibold mb-4">Usuários</h2>
+<div class="p-6 h-full">
+  <h2 class="text-2xl font-semibold mb-5">Usuários</h2>
+
+  <h4 class="text-2xl mb-4">Filtros</h4>
 
   <!-- Filtros -->
-  <div class="flex flex-wrap gap-4 mb-4">
+  <div class="flex flex-wrap gap-15 mb-20">
     <div>
-      <label class="block text-sm">Nome:</label>
-      <input type="text" class="border rounded px-2 py-1"/>
+      <label class="block text-sm px-2">Nome:</label>
+      <input type="text" [(ngModel)]="filters.nome" class="border rounded px-2 py-1"/>
     </div>
     <div>
-      <label class="block text-sm">CPF:</label>
-      <input type="text" class="border rounded px-2 py-1"/>
+      <label class="block text-sm px-2">CPF:</label>
+      <input type="text" [(ngModel)]="filters.cpf" class="border rounded px-2 py-1"/>
     </div>
     <div>
-      <label class="block text-sm">Gênero:</label>
-      <select class="border rounded px-2 py-1">
+      <label class="block text-sm px-2">Gênero:</label>
+      <select [(ngModel)]="filters.genero" class="border rounded px-2 py-1">
         <option value="">Todos</option>
         <option value="Masculino">Masculino</option>
         <option value="Feminino">Feminino</option>
       </select>
     </div>
-    <button class="bg-green-500 text-white px-4 py-2 rounded">Aplicar</button>
+    <button (click)="applyFilters()" class="bg-transparent text-green-800 px-0 py-0 rounded">Aplicar</button>
   </div>
 
-<!--  <div class="flex flex-wrap gap-4 mb-4">-->
-<!--    <div>-->
-<!--      <label class="block text-sm">Nome:</label>-->
-<!--      <input type="text" [(ngModel)]="filters.name" class="border rounded px-2 py-1"/>-->
-<!--    </div>-->
-<!--    <div>-->
-<!--      <label class="block text-sm">CPF:</label>-->
-<!--      <input type="text" [(ngModel)]="filters.cpf" class="border rounded px-2 py-1"/>-->
-<!--    </div>-->
-<!--    <div>-->
-<!--      <label class="block text-sm">Gênero:</label>-->
-<!--      <select [(ngModel)]="filters.gender" class="border rounded px-2 py-1">-->
-<!--        <option value="">Todos</option>-->
-<!--        <option value="Masculino">Masculino</option>-->
-<!--        <option value="Feminino">Feminino</option>-->
-<!--      </select>-->
-<!--    </div>-->
-<!--    <button (click)="applyFilters()" class="bg-green-500 text-white px-4 py-2 rounded">Aplicar</button>-->
-<!--  </div>-->
-
-  <!-- Ações -->
-  <div class="flex gap-2 mb-4">
-    <button class="bg-purple-500 text-white px-4 py-2 rounded">Criar Usuário</button>
-    <button class="bg-red-500 text-white px-4 py-2 rounded">Excluir Selecionados</button>
+  <div class="flex gap-2 mb-4 justify-content-end">
+    <button (click)="createUser()" class="bg-[var(--color-primary)] text-white px-4 py-2 rounded">Criar Usuário</button>
+    <button (click)="deleteSelected()" class="bg-[var(--color-danger)] text-white px-4 py-2 rounded">Excluir Selecionados</button>
   </div>
-
-  <!--  <div class="flex gap-2 mb-4">-->
-<!--    <button (click)="createUser()" class="bg-purple-500 text-white px-4 py-2 rounded">Criar Usuário</button>-->
-<!--    <button (click)="deleteSelected()" class="bg-red-500 text-white px-4 py-2 rounded">Excluir Selecionados</button>-->
-<!--  </div>-->
 
   <!-- Tabela -->
+
   <table class="min-w-full border border-gray-200">
     <thead class="bg-gray-100">
     <tr>
-      <th class="p-2"><input type="checkbox"/></th>
+      <th class="p-2">
+        <input type="checkbox" (change)="selectAll($event)"
+           [disabled]="usuariosPage?.content?.length === 0 || selectedUserIds.length === usuariosPage?.content?.length"
+        />
+      </th>
       <th class="p-2">Nome</th>
       <th class="p-2">Email</th>
-      <th class="p-2">Gênero</th>
+      <th class="p-2">Cpf</th>
       <th class="p-2">Tipo</th>
       <th class="p-2">Ações</th>
     </tr>
     </thead>
     <tbody>
-    <tr class="border-b">
+    <tr *ngFor="let user of usuariosPage?.content" class="border-b">
       <td class="p-2">
-        <input type="checkbox" />
+        <input type="checkbox" [checked]="selectedUserIds.includes(user.id)" (change)="toggleSelection(user.id)"/>
       </td>
-      <td class="p-2">Vinicius</td>
-      <td class="p-2">vinicius0gmail.com</td>
-      <td class="p-2">Masculino</td>
-      <td class="p-2">Associado</td>
+      <td class="p-2">{{ user.nome }}</td>
+      <td class="p-2">{{ user.email }}</td>
+      <td class="p-2">{{ user.cpf }}</td>
+      <td class="p-2">{{ user.tipo }}</td>
       <td class="p-2 flex gap-2">
-        <button class="text-purple-500">🔍</button>
-        <button class="text-blue-500">✏️</button>
-        <button class="text-red-500">🗑️</button>
+        <button class="bg-[var(--color-accent)]">🔍</button>
+        <button class="bg-[var(--color-primary)]">✏️</button>
+        <button class="bg-[var(--color-danger)]" (click)="deleteSelected()">🗑️</button>
       </td>
     </tr>
     </tbody>
   </table>
 
-<!--  <table class="min-w-full border border-gray-200">-->
-<!--    <thead class="bg-gray-100">-->
-<!--    <tr>-->
-<!--      <th class="p-2"><input type="checkbox" (change)="users.forEach(u => toggleSelection(u.id))"/></th>-->
-<!--      <th class="p-2">Nome</th>-->
-<!--      <th class="p-2">Email</th>-->
-<!--      <th class="p-2">Gênero</th>-->
-<!--      <th class="p-2">Tipo</th>-->
-<!--      <th class="p-2">Ações</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    <tr *ngFor="let user of users" class="border-b">-->
-<!--      <td class="p-2">-->
-<!--        <input type="checkbox" [checked]="selectedUserIds.includes(user.id)" (change)="toggleSelection(user.id)"/>-->
-<!--      </td>-->
-<!--      <td class="p-2">{{ user.name }}</td>-->
-<!--      <td class="p-2">{{ user.email }}</td>-->
-<!--      <td class="p-2">{{ user.gender }}</td>-->
-<!--      <td class="p-2">{{ user.type }}</td>-->
-<!--      <td class="p-2 flex gap-2">-->
-<!--        <button class="text-purple-500">🔍</button>-->
-<!--        <button class="text-blue-500">✏️</button>-->
-<!--        <button class="text-red-500" (click)="deleteSelected()">🗑️</button>-->
-<!--      </td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--  </table>-->
-
   <!-- Paginação -->
   <div class="flex justify-between mt-4">
-    <button class="px-3 py-1 border rounded" [disabled]="offset === 0">Anterior</button>
-    <button class="px-3 py-1 border rounded">Próximo</button>
+    <button (click)="prevPage()" class="px-3 py-1 border rounded" [disabled]="offset === 0">Anterior</button>
+    <button (click)="nextPage()" class="px-3 py-1 border rounded">Próximo</button>
   </div>
-
-<!--  <div class="flex justify-between mt-4">-->
-<!--    <button (click)="prevPage()" class="px-3 py-1 border rounded" [disabled]="offset === 0">Anterior</button>-->
-<!--    <button (click)="nextPage()" class="px-3 py-1 border rounded">Próximo</button>-->
-<!--  </div>-->
 </div>

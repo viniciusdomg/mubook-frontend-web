@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import {Router} from '@angular/router';
-import {UsuarioRequestModel} from '../../models/gerenciar-usuarios/usuario.request.model';
+import {UsuarioRequestModel, USER_ROLES} from '../../models/gerenciar-usuarios/usuario.request.model';
 import {UsuarioService} from '../../services/usuario.service';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
+import {PageResponseModel} from '../../models/page.response.model';
+import {UsuarioResponseModel} from '../../models/gerenciar-usuarios/usuario.response.model';
+
 
 @Component({
   selector: 'app-gerenciar-usuarios',
@@ -13,62 +16,83 @@ import {CommonModule} from '@angular/common';
 })
 export class GerenciarUsuariosComponent {
 
-  // @ts-ignore
-  usuarioRequest: UsuarioRequestModel;
+  usuarioRequest: UsuarioRequestModel = {
+    id: 0,
+    nome: '',
+    cpf: '',
+    email: '',
+    senha: '',
+    tipo: ''
+  };
+
+  usuariosPage: PageResponseModel<UsuarioResponseModel> | null = null;
+
   selectedUserIds: number[] = [];
+
   filters = { nome: '', cpf: '', genero: '' };
   offset = 0;
   limit = 20;
 
-  constructor(private usuario: UsuarioService, public router: Router) {}
+  constructor(private service: UsuarioService, public router: Router) {}
 
-  // ngOnInit() {
-  //   this.loadUsers();
-  // }
+  ngOnInit() {
+    this.loadUsers();
+  }
 
-  // loadUsers() {
-  //   this.userService.getUsers(this.offset, this.limit, this.filters).subscribe(data => {
-  //     this.users = data;
-  //   });
-  // }
-  //
-  // applyFilters() {
-  //   this.offset = 0;
-  //   this.loadUsers();
-  // }
-  //
-  // nextPage() {
-  //   this.offset += this.limit;
-  //   this.loadUsers();
-  // }
-  //
-  // prevPage() {
-  //   if (this.offset >= this.limit) {
-  //     this.offset -= this.limit;
-  //     this.loadUsers();
-  //   }
-  // }
-  //
-  // toggleSelection(id: number) {
-  //   if (this.selectedUserIds.includes(id)) {
-  //     this.selectedUserIds = this.selectedUserIds.filter(i => i !== id);
-  //   } else {
-  //     this.selectedUserIds.push(id);
-  //   }
-  // }
-  //
-  // deleteSelected() {
-  //   if (this.selectedUserIds.length > 0) {
-  //     this.userService.deleteUsers(this.selectedUserIds).subscribe(() => {
-  //       this.selectedUserIds = [];
-  //       this.loadUsers();
-  //     });
-  //   }
-  // }
+  loadUsers() {
+    this.service.pageUsuarios(this.offset, this.limit, this.filters).subscribe(data => {
+      this.usuariosPage = data;
+    });
+  }
+
+  applyFilters() {
+    this.offset = 0;
+    this.loadUsers();
+  }
+
+  nextPage() {
+    this.offset += this.limit;
+    this.loadUsers();
+  }
+
+  prevPage() {
+    if (this.offset >= this.limit) {
+      this.offset -= this.limit;
+      this.loadUsers();
+    }
+  }
+
+  toggleSelection(id: number) {
+    if (this.selectedUserIds.includes(id)) {
+      this.selectedUserIds = this.selectedUserIds.filter(i => i !== id);
+    } else {
+      this.selectedUserIds.push(id);
+    }
+  }
+
+  selectAll(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const checked = input.checked;
+
+    if (checked && this.usuariosPage?.content) {
+      this.selectedUserIds = this.usuariosPage.content.map(u => u.id);
+    } else {
+      this.selectedUserIds = [];
+    }
+  }
+
+  deleteSelected() {
+    if (this.selectedUserIds.length > 0) {
+      this.service.deleteSelect(this.selectedUserIds).subscribe(() => {
+        this.selectedUserIds = [];
+        this.loadUsers();
+      });
+    }
+  }
 
   createUser() {
-    this.usuario.cadastrar(this.usuarioRequest).subscribe(() => {
-      // this.loadUsers();
+    this.service.cadastrar(this.usuarioRequest).subscribe(() => {
+      this.loadUsers();
     });
   }
 }
