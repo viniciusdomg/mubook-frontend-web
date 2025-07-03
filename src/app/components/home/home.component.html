@@ -1,2 +1,123 @@
-<p>DRZIN</p>
+<p class="ml-[150px] text-lg">Reservas Do Mês</p>
+<p class="ml-[150px] text-gray-400 text-sm">
+  Ola, João. Bem vindo de volta ao MuBook!
+</p>
+
+<div class="flex gap-[250px] items-center mb-16">
+  <div class="w-[400px] h-[200px] ml-[150px] bg-white border border-gray-300 flex items-center justify-center">
+    123
+  </div>
+
+  <div class="flex items-center justify-center gap-6 mt-10">
+
+    <!-- Botão voltar -->
+    <button
+      (click)="goPrev()"
+      class="p-2 bg-gray-200 rounded disabled:opacity-30"
+      [disabled]="prevIndex() === null"
+    >
+      ←
+    </button>
+
+    <!-- Anterior -->
+    <div
+      *ngIf="prevIndex() !== null"
+      class="w-[120px] h-[80px] bg-white border border-gray-300 shadow-md flex items-center justify-center opacity-60 scale-90 transition"
+      (click)="setActive(prevIndex()!)"
+    >
+      {{ items[prevIndex()!] }}
+    </div>
+
+    <!-- Ativo -->
+    <div
+      class="w-[280px] h-[170px] bg-white border border-red-500 shadow-lg flex items-center justify-center transition"
+    >
+      {{ items[activeIndex] }}
+    </div>
+
+    <!-- Próximo -->
+    <div
+      *ngIf="nextIndex() !== null"
+      class="w-[120px] h-[80px] bg-white border border-gray-300 shadow-md flex items-center justify-center opacity-60 scale-90 transition"
+      (click)="setActive(nextIndex()!)"
+    >
+      {{ items[nextIndex()!] }}
+    </div>
+
+    <!-- Botão avançar -->
+    <button
+      (click)="goNext()"
+      class="p-2 bg-gray-200 rounded disabled:opacity-30"
+      [disabled]="nextIndex() === null"
+    >
+      →
+    </button>
+  </div>
+</div>
+
+<hr class="border-t border-gray-300 w-full" />
+
+<div class="mt-8">
+  <p class="ml-[150px] text-lg">Faça Sua Reserva</p>
+</div>
+<div class="mt-20"> <!-- aumentei de mt-8 para mt-20 -->
+  <div class="flex items-center justify-center gap-4 mt-16"> <!-- aumentei de mt-10 para mt-16 -->
+
+    <!-- Botão voltar -->
+    <button
+      (click)="goPrev2()"
+      class="p-2 bg-gray-200 rounded"
+    >
+      ←
+    </button>
+
+    <!-- Anterior do anterior -->
+    <div
+      class="w-[140px] h-[85px] bg-white border border-gray-300 shadow flex items-center justify-center opacity-40 scale-75 cursor-pointer"
+      (click)="setActive2((prevIndex2() - 1 + items2.length) % items2.length)"
+    >
+      {{ items2[(prevIndex2() - 1 + items2.length) % items2.length] }}
+    </div>
+
+    <!-- Anterior -->
+    <div
+      class="w-[280px] h-[170px] bg-white border border-gray-300 shadow-md flex items-center justify-center cursor-pointer"
+      (click)="setActive2(prevIndex2())"
+    >
+      {{ items2[prevIndex2()] }}
+    </div>
+
+    <!-- Ativo -->
+    <div
+      class="w-[280px] h-[170px] bg-white border border-red-500 shadow-lg flex items-center justify-center"
+    >
+      {{ items2[activeIndex2] }}
+    </div>
+
+    <!-- Próximo -->
+    <div
+      class="w-[280px] h-[170px] bg-white border border-gray-300 shadow-md flex items-center justify-center cursor-pointer"
+      (click)="setActive2(nextIndex2())"
+    >
+      {{ items2[nextIndex2()] }}
+    </div>
+
+    <!-- Próximo do próximo -->
+    <div
+      class="w-[140px] h-[85px] bg-white border border-gray-300 shadow flex items-center justify-center opacity-40 scale-75 cursor-pointer"
+      (click)="setActive2((nextIndex2() + 1) % items2.length)"
+    >
+      {{ items2[(nextIndex2() + 1) % items2.length] }}
+    </div>
+
+    <!-- Botão avançar -->
+    <button
+      (click)="goNext2()"
+      class="p-2 bg-gray-200 rounded"
+    >
+      →
+    </button>
+  </div>
+</div>
+
 
