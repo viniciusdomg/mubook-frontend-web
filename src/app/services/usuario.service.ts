@@ -7,7 +7,7 @@ import {UsuarioResponseModel} from '../models/gerenciar-usuarios/usuario.respons
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:8080/api/usuario';
+  private apiUrl = 'http://localhost:8080/api/usuario/';
 
   constructor(private http: HttpClient) {}
 

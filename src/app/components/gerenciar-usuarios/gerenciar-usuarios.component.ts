@@ -33,6 +33,8 @@ export class GerenciarUsuariosComponent {
   offset = 0;
   limit = 20;
 
+  showModal = false;
+
   constructor(private service: UsuarioService, public router: Router) {}
 
   ngOnInit() {
@@ -95,4 +97,23 @@ export class GerenciarUsuariosComponent {
       this.loadUsers();
     });
   }
+
+  openModal() {
+    this.usuarioRequest = {
+      id: 0,
+      nome: '',
+      cpf: '',
+      email: '',
+      senha: '',
+      tipo: ''
+    };
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
+
+  protected readonly open = open;
+  protected readonly USER_ROLES = USER_ROLES;
 }

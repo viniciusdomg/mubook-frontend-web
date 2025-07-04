@@ -5,12 +5,13 @@ import { Observable, tap } from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import {AuthRequestModel} from '../../models/auth/auth.request.model';
 import {AuthResponseModel} from '../../models/auth/auth.response.model';
+import {Router} from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api/auth/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(auth: AuthRequestModel): Observable<HttpResponse<AuthResponseModel>> {
     return this.http.post<AuthResponseModel>(this.apiUrl + 'login', {
@@ -27,7 +28,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
+    void this.router.navigate(['/login']);
   }
 
   getUsuario(): UsuarioRequestModel | null {
