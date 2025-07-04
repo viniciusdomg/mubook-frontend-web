@@ -10,7 +10,6 @@ import { FormsModule } from '@angular/forms';
 export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
   quadraSelecionada: string = '';
 
-  // Agora com objetos estáticos
   items = [
     {
       capMaxima: 20,
