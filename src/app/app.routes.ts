@@ -8,6 +8,7 @@ import {MainLayoutComponent} from './layout/main-layout/main-layout.component';
 import {GerenciarUsuariosComponent} from './components/gerenciar-usuarios/gerenciar-usuarios.component';
 import { VizualizarQuadrasComponent } from './components/vizualizar-quadras/vizualizar-quadras.component';
 import { ReservasComponent } from './components/reservas/reservas.component';
+import {PerfilComponent} from './components/perfil/perfil.component';
 
 export const routes: Routes = [
   {
@@ -17,8 +18,9 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
       { path: 'gerenciar-usuarios', component: GerenciarUsuariosComponent, canActivate: [AuthGuard] },
-      { path: 'vizualizar', component: VizualizarQuadrasComponent,},
-      { path: 'reservas', component: ReservasComponent,}
+      { path: 'perfil', component: PerfilComponent, canActivate: [AuthGuard]},
+      { path: 'vizualizar-quadras', component: VizualizarQuadrasComponent, canActivate: [AuthGuard]},
+      { path: 'reservas', component: ReservasComponent, canActivate: [AuthGuard]},
       // { path: 'perfil', component: PerfilComponent },
     ]
   },
