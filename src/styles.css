@@ -7,6 +7,7 @@
   --color-primary-hover: #4a24a1;
   --color-accent: #8A2BE2;
   --color-danger: #FF5F6C;
+  --color-danger-hover: #e35561;
 
   /* Cores de fundo */
   --color-input-bg: #e3e3e4;
@@ -23,7 +24,7 @@
 
 }
 
-html, body { 
-    height: 100%; 
+html, body {
+    height: 100%;
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

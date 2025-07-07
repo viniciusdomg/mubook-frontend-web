@@ -26,7 +26,7 @@ export class UsuarioService {
   }
 
   cadastrar(usuario: UsuarioRequestModel){
-    return this.http.post<UsuarioRequestModel>(`${this.apiUrl}`, { ...usuario });
+    return this.http.post(`${this.apiUrl}`, { ...usuario }, {responseType: 'text'});
   }
 
   buscarPorId(id: number) {
@@ -37,15 +37,15 @@ export class UsuarioService {
   //   return this.http.put<UsuarioRequestModel>(`${this.apiUrl}/${usuario.id}`, { usuario });
   // }
 
-  solicitarRedefinicaoSenha(email: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/password`, { email });
+  solicitarRedefinicaoSenha(email: string): Observable<string> {
+    return this.http.patch<string>(`${this.apiUrl}/password`, { email });
   }
 
-  // deletar(id: number): Observable<any> {
-  //   return this.http.delete(`${this.apiUrl}/${id}`);
-  // }
+  deleteOne(id: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}${id}`, {responseType: 'text'});
+  }
 
-  deleteSelect(ids: number[]): Observable<any> {
-    return this.http.request('delete', `${this.apiUrl}/all`, { body: ids });
+  deleteSelect(ids: number[]): Observable<string> {
+    return this.http.request('delete', `${this.apiUrl}all`, { body: ids, responseType: 'text' });
   }
 }

@@ -25,42 +25,57 @@
   </div>
 
   <div class="flex gap-2 mb-4 justify-content-end">
-    <button (click)="openModal()" class="bg-[var(--color-primary)] text-white px-4 py-2 rounded">Criar Usuário</button>
-    <button (click)="deleteSelected()" class="bg-[var(--color-danger)] text-white px-4 py-2 rounded">Excluir Selecionados</button>
+    <button (click)="openModal()"
+            class="bg-[var(--color-primary)] text-white px-4 py-2 rounded hover:bg-[var(--color-primary-hover)]">Criar Usuário
+    </button>
+    <button (click)="deleteSelected()"
+            class="bg-[var(--color-danger)] text-white px-4 py-2 rounded hover:bg-[var(--color-danger-hover)]">Excluir Selecionados
+    </button>
   </div>
 
   <!-- Tabela -->
 
-  <table class="min-w-full border border-gray-200">
+  <table class="w-full table-fixed border border-gray-200">
     <thead class="bg-gray-100">
     <tr>
-      <th class="p-2">
+      <th class="p-2 w-12">
         <input type="checkbox" (change)="selectAll($event)"
-           [disabled]="usuariosPage?.content?.length === 0 || selectedUserIds.length === usuariosPage?.content?.length"
+           [disabled]="usuariosPage?.content?.length === 0"
         />
       </th>
-      <th class="p-2">Nome</th>
-      <th class="p-2">Email</th>
-      <th class="p-2">Cpf</th>
-      <th class="p-2">Tipo</th>
-      <th class="p-2">Ações</th>
+      <th class="p-2 text-center">Nome</th>
+      <th class="p-2 text-center">Email</th>
+      <th class="p-2 text-center">Cpf</th>
+      <th class="p-2 text-center">Tipo</th>
+      <th class="p-2 text-center">Ações</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let user of usuariosPage?.content" class="border-b">
-      <td class="p-2">
-        <input type="checkbox" [checked]="selectedUserIds.includes(user.id)" (change)="toggleSelection(user.id)"/>
-      </td>
-      <td class="p-2">{{ user.nome }}</td>
-      <td class="p-2">{{ user.email }}</td>
-      <td class="p-2">{{ user.cpf }}</td>
-      <td class="p-2">{{ user.tipo }}</td>
-      <td class="p-2 flex gap-2">
-        <button class="bg-[var(--color-accent)] rounded p-0.5">🔍</button>
-        <button class="bg-[var(--color-primary)] rounded p-0.5">✏️</button>
-        <button class="bg-[var(--color-danger)] rounded p-0.5" (click)="deleteSelected()">🗑️</button>
-      </td>
-    </tr>
+      <tr *ngFor="let user of usuariosPage?.content" class="border-b">
+        <td class="p-2 w-12">
+          <input type="checkbox" [checked]="selectedUserIds.includes(user.id)" (change)="toggleSelection(user.id)"/>
+        </td>
+        <td class="p-2 text-center">{{ user.nome }}</td>
+        <td class="p-2 text-center">{{ user.email }}</td>
+        <td class="p-2 text-center">{{ user.cpf }}</td>
+        <td class="p-2 text-center">{{ user.tipo }}</td>
+        <td class="p-2 flex gap-2 justify-center">
+          <button class="bg-[var(--color-accent)] p-2 rounded text-white hover:opacity-70">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="bg-[var(--color-primary)] p-2 rounded text-white hover:opacity-70">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(user.id)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="!usuariosPage?.content || (usuariosPage?.content?.length ?? 0) === 0">
+        <td colspan="6" class="p-4 text-center text-gray-500 italic">
+          Nenhum usuário cadastrado
+        </td>
+      </tr>
     </tbody>
   </table>
 
