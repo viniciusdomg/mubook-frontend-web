@@ -12,11 +12,13 @@
   /* Cores de fundo */
   --color-input-bg: #e3e3e4;
   --color-section-bg: #e5e5e5;
+  --color-bg: #464255;
 
   /* Cores de texto */
   --color-text-gray: #4a4a4a;
   --color-link: #3b3b98;
   --color-slogan: #555555;
+  --color-placeholder: #999999;
 
   /* Sombras (RGB) */
   --shadow-button: 0 5px 10px rgba(92, 46, 198, 0.3);

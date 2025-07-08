@@ -1,14 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {filter} from 'rxjs';
+import {NgForOf, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-vizualizar-quadras',
-  imports: [FormsModule],
+  imports: [FormsModule, NgForOf, NgIf],
   templateUrl: './vizualizar-quadras.component.html',
   styleUrl: './vizualizar-quadras.component.css'
 })
 export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
   quadraSelecionada: string = '';
+
+  idSelecionado: number | null = null;
+  selectedUserIds: number[] = [];
+  tipoQuadrasPage: any | null = null;
 
   items = [
     {
@@ -47,13 +53,13 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
   private interval: any;
 
   ngOnInit() {
-    this.interval = setInterval(() => {
-      this.goNext();
-    }, 5000);
+    // this.interval = setInterval(() => {
+    //   this.goNext();
+    // }, 5000);
   }
 
   ngOnDestroy() {
-    clearInterval(this.interval);
+    // clearInterval(this.interval);
   }
 
   setActive(index: number) {
@@ -75,4 +81,33 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
   nextIndex(): number {
     return (this.activeIndex + 1) % this.items.length;
   }
+
+  filterQuadrasById() {
+    console.log("filtrar por id: ", this.idSelecionado);
+  }
+
+  selectAll(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const checked = input.checked;
+
+    // if (checked && this.usuariosPage?.content) {
+    //   this.selectedUserIds = this.usuariosPage.content.map(u => u.id);
+    // } else {
+    //   this.selectedUserIds = [];
+    // }
+  }
+
+  toggleSelection(id: number) {
+    if (this.selectedUserIds.includes(id)) {
+      this.selectedUserIds = this.selectedUserIds.filter(i => i !== id);
+    } else {
+      this.selectedUserIds.push(id);
+    }
+  }
+
+  deleteOne(id: number) {
+    console.log("deletar: ", id);
+  }
+
+  protected readonly filter = filter;
 }
