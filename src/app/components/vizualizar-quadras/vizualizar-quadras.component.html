@@ -1,45 +1,48 @@
 <div class="p-6 h-full">
-  <p class="text-2xl mb-[40px] font-semibold">Quadras</p>
+  <h2 class="text-2xl mb-[40px] font-semibold">Quadras</h2>
 
   <div class="flex justify-between mb-[120px]">
     <div class="flex items-center gap-4">
       <p class="text-lg text-gray-700 m-0">Tipo de quadra:</p>
 
       <select
-        [(ngModel)]="quadraSelecionada"
+        [(ngModel)]="filters"
+        (change)="filterQuadrasByTipo()"
+        [disabled]="tipos.length === 0"
         class="border border-gray-300 rounded px-4 py-2 w-[280px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
       >
-        <option value="" disabled selected>Selecione o tipo de quadra</option>
-        <option value="futsal">Futsal</option>
-        <option value="volei">Vôlei</option>
-        <option value="basquete">Basquete</option>
-        <option value="tenis">Tênis</option>
-        <option value="areia">Areia</option>
-        <option value="todas">Todas</option>
+        <option value="0" disabled selected>Selecione o tipo de quadra</option>
+        <option *ngFor="let tipo of tipos" [value]="tipo.id">{{ tipo.nome }}</option>
+        <option value="0">Todas</option>
       </select>
 
       <label class="text-lg text-gray-700 m-0">Buscar por ID:</label>
       <div class="relative w-40">
+        <!-- Prefixo visual -->
+        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">#</span>
+
         <input
-          type="text"
+          type="number"
           [(ngModel)]="idSelecionado"
-          name="nome"
+          name="id"
           required
-          placeholder="#554781"
-          class="border rounded w-full pl-3 pr-11 py-2 placeholder-lg placeholder:text-[var(--color-placeholder)] focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
+          placeholder="553417"
+          class="border rounded w-full pl-7 pr-11 py-2 placeholder-lg placeholder:text-[var(--color-placeholder)] focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
         />
+
         <button
           type="button"
-          (click)="filterQuadrasById()"
+          (click)="filterQuadraById()"
           class="absolute right-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded hover:bg-[var(--color-primary-hover)] focus:outline-none"
         >
           <i class="bi bi-search text-white"></i>
         </button>
       </div>
+
     </div>
     <div class="flex justify-center">
       <button
-        type="submit"
+        (click)="openModalCreate()"
         class="bg-[var(--color-primary)] text-white px-4 py-2 rounded"
       >
         Adicionar Quadra
@@ -56,9 +59,9 @@
       (click)="setActive(prevIndex())"
     >
       <div class="p-2 flex flex-col justify-center">
-        <p style="font-size: 12px; margin-bottom: 40px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].capMaxima }}</p>
+        <p style="font-size: 12px; margin-bottom: 55px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].capMaxima }}</p>
         <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[nextIndex()].tipo }}</p>
-        <p style="font-size: 12px;"><strong>Tamanho:</strong> {{ items[nextIndex()].tamanho }}</p>
+<!--        <p style="font-size: 12px;"><strong>Tamanho:</strong> {{ items[nextIndex()].tamanho }}</p>-->
       </div>
       <img
         [src]="'assets/images/' + items[prevIndex()].imagem"
@@ -72,11 +75,11 @@
       class="w-[680px] h-[370px] bg-white border border-red-500 shadow-lg flex cursor-default transition"
     >
         <div class="p-6 flex flex-col justify-start text-lg h-full">
-        <p style="margin-bottom: 150px;" class="text-sm">
+        <p style="margin-bottom: 165px;" class="text-sm">
             <strong>Capacidade Máxima:</strong> {{ items[activeIndex].capMaxima }}
         </p>
         <p class="text-2xl"><strong>Tipo da Quadra:</strong> {{ items[activeIndex].tipo }}</p>
-        <p><strong>Tamanho:</strong> {{ items[activeIndex].tamanho }}</p>
+<!--        <p><strong>Tamanho:</strong> {{ items[activeIndex].tamanho }}</p>-->
         </div>
       <img
         [src]="'assets/images/' + items[activeIndex].imagem"
@@ -92,9 +95,9 @@
       (click)="setActive(nextIndex())"
     >
       <div class="p-2 flex flex-col justify-center">
-        <p style="font-size: 12px; margin-bottom: 40px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].capMaxima }}</p>
+        <p style="font-size: 12px; margin-bottom: 55px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].capMaxima }}</p>
         <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[nextIndex()].tipo }}</p>
-        <p style="font-size: 12px;"><strong>Tamanho:</strong> {{ items[nextIndex()].tamanho }}</p>
+<!--        <p style="font-size: 12px;"><strong>Tamanho:</strong> {{ items[nextIndex()].tamanho }}</p>-->
       </div>
       <img
         [src]="'assets/images/' + items[nextIndex()].imagem"
@@ -108,30 +111,20 @@
 
   <hr class="border-t border-gray-300 w-full m-16" />
 
-  <table class="w-full table-fixed border border-gray-200">
+  <table class="min-w-[1200px] border shadow-lg border-gray-200 mx-auto mt-[80px]">
     <thead class="bg-gray-100">
     <tr>
-      <th class="p-2 w-12">
-        <input type="checkbox" (change)="selectAll($event)"
-               [disabled]="tipoQuadrasPage?.content !== null || tipoQuadrasPage?.content?.length === 0"
-        />
-      </th>
-      <th class="p-2 text-center">Nome</th>
-      <th class="p-2 text-center">Email</th>
-      <th class="p-2 text-center">Cpf</th>
-      <th class="p-2 text-center">Tipo</th>
+      <th class="p-2 text-center">Tipo Quadra</th>
+      <th class="p-2 text-center">Quantidade Máx</th>
+      <th class="p-2 text-center">ID</th>
       <th class="p-2 text-center">Ações</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let user of tipoQuadrasPage?.content" class="border-b">
-      <td class="p-2 w-12">
-        <input type="checkbox" [checked]="selectedUserIds.includes(user.id)" (change)="toggleSelection(user.id)"/>
-      </td>
-      <td class="p-2 text-center">{{ user.nome }}</td>
-      <td class="p-2 text-center">{{ user.email }}</td>
-      <td class="p-2 text-center">{{ user.cpf }}</td>
-      <td class="p-2 text-center">{{ user.tipo }}</td>
+    <tr *ngFor="let tipo of tipoQuadrasPage?.content" class="border-b">
+      <td class="p-2 text-center">{{ tipo.nome }}</td>
+      <td class="p-2 text-center">{{ tipo.quantidadeMaxima }}</td>
+      <td class="p-2 text-center">{{ tipo.id }}</td>
       <td class="p-2 flex gap-2 justify-center">
         <button class="bg-[var(--color-accent)] p-2 rounded text-white hover:opacity-70">
           <i class="bi bi-eye"></i>
@@ -139,16 +132,137 @@
         <button class="bg-[var(--color-primary)] p-2 rounded text-white hover:opacity-70">
           <i class="bi bi-pencil"></i>
         </button>
-        <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(user.id)">
+        <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(tipo.id)">
           <i class="bi bi-trash"></i>
         </button>
       </td>
     </tr>
     <tr *ngIf="!tipoQuadrasPage?.content || (tipoQuadrasPage?.content?.length ?? 0) === 0">
-      <td colspan="6" class="p-4 text-center text-gray-500 italic">
-        Nenhum usuário cadastrado
+      <td colspan="5" class="p-4 text-center text-gray-500 italic">
+        Nenhum tipo de quadra cadastrado
       </td>
     </tr>
     </tbody>
   </table>
+
+  <div class="w-[1200px] mx-auto flex justify-between mt-4">
+    <button (click)="prevPage()" class="px-3 py-1 border rounded" [disabled]="offset === 0">Anterior</button>
+    <button (click)="nextPage()" class="px-3 py-1 border rounded">Próximo</button>
+  </div>
+
+
+
+  <div
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    *ngIf="showModal"
+  >
+    <div class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg relative">
+      <div class="absolute top-2 right-2">
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="p-2 rounded hover:bg-gray-200"
+        >
+          <i class="bi bi-x-lg text-gray-600"></i>
+        </button>
+      </div>
+
+      <h2 class="text-xl font-semibold mb-4 text-center">Nova Quadra</h2>
+
+      <form (ngSubmit)="createQuadra()">
+
+        <div class="mb-4">
+          <div
+            class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-[var(--color-primary)] cursor-pointer transition relative"
+            (click)="fileInput.click()"
+          >
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              class="hidden"
+            />
+
+            <img *ngIf="request.foto_url"
+                 [src]="request.foto_url"
+                 alt="Preview da imagem"
+                 class="w-full h-auto max-h-48 object-contain rounded mb-2" />
+
+            <ng-container *ngIf="!request.foto_url">
+              <i class="bi bi-image text-3xl text-gray-400"></i>
+              <span class="text-gray-500 mt-2">Selecione a imagem</span>
+            </ng-container>
+
+            <span class="text-gray-700 mt-2 text-sm" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+          </div>
+        </div>
+
+        <!-- Nome -->
+        <div class="mb-4">
+          <label class="block text-sm mb-1">Nome da Quadra</label>
+          <div class="relative">
+            <input
+              type="text"
+              [(ngModel)]="request.nome"
+              name="nome"
+              required
+              class="border rounded w-full pl-11 pr-3 py-2"
+            />
+            <div class="absolute left-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded">
+              <i class="bi bi-person text-white"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- CPF -->
+        <div class="mb-4">
+          <label class="block text-sm mb-1">Capacidade Máx</label>
+          <div class="relative">
+            <input
+              type="number"
+              [(ngModel)]="request.quantidadeMaxima"
+              name="quantidade-max"
+              required
+              class="border rounded w-full pl-11 pr-3 py-2"
+            />
+            <div class="absolute left-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded">
+              <i class="bi bi-card-text text-white"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tipo de quadra -->
+        <div class="mb-5">
+          <label class="block text-sm mb-1">Tipo de Quadra</label>
+          <div class="relative">
+            <select
+              [(ngModel)]="request.tipoQuadra"
+              name="tipoQuadra"
+              required
+              class="border rounded w-full pl-11 pr-3 py-2"
+            >
+              <option value="" disabled selected>Escolha um tipo</option>
+              <option *ngFor="let tipo of tipos" [value]="tipo.id">{{ tipo.nome }}</option>
+            </select>
+            <div
+              class="absolute left-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded"
+            >
+              <i class="bi bi-grid text-white"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center">
+          <button
+            type="submit"
+            class="bg-[var(--color-primary)] text-white px-4 py-2 rounded"
+          >
+            Criar novo Quadra
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </div>

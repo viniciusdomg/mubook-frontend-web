@@ -175,7 +175,6 @@ export class GerenciarUsuariosComponent implements OnInit{
     });
   }
 
-
   createUser() {
     this.service.cadastrar(this.usuarioRequest).subscribe({
       next: res => {
