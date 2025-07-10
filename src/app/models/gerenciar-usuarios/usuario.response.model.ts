@@ -4,4 +4,5 @@ export interface UsuarioResponseModel{
   cpf: string;
   email: string;
   tipo: string;
+  ativo: boolean;
 }

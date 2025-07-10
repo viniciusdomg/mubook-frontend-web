@@ -30,7 +30,7 @@ export class UsuarioService {
   }
 
   buscarPorId(id: number) {
-    return this.http.get<UsuarioRequestModel>(`${this.apiUrl}/${id}`);
+    return this.http.get<UsuarioResponseModel>(`${this.apiUrl}${id}`);
   }
 
   // atualizar(usuario: UsuarioRequestModel): Observable<UsuarioRequestModel> {

@@ -60,18 +60,18 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
   items: QuadraResponseModel[] = [];
 
   activeIndex = 0;
-  // private interval: any;
+  private interval: any;
 
   ngOnInit() {
     this.loadQuadras()
     this.loadTipos();
-    // this.interval = setInterval(() => {
-    //   this.goNext();
-    // }, 5000);
+    this.interval = setInterval(() => {
+      this.goNext();
+    }, 5000);
   }
 
   ngOnDestroy() {
-    // clearInterval(this.interval);
+    clearInterval(this.interval);
   }
 
   loadQuadras(){

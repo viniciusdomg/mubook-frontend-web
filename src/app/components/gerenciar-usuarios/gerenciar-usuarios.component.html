@@ -13,15 +13,7 @@
       <label class="block text-sm px-2">CPF:</label>
       <input type="text" [(ngModel)]="filters.cpf" class="border rounded px-2 py-1"/>
     </div>
-    <div>
-      <label class="block text-sm px-2">Gênero:</label>
-      <select [(ngModel)]="filters.genero" class="border rounded px-2 py-1">
-        <option value="">Todos</option>
-        <option value="Masculino">Masculino</option>
-        <option value="Feminino">Feminino</option>
-      </select>
-    </div>
-    <button (click)="applyFilters()" class="bg-transparent text-green-800 px-0 py-0 rounded">Aplicar</button>
+    <button (click)="applyFilters()" class="bg-transparent text-green-800 px-0 py-0 rounded">Aplicar  <i class="bi bi-check-lg text-green-800"></i></button>
   </div>
 
   <div class="flex gap-2 mb-4 justify-content-end">
@@ -60,7 +52,7 @@
         <td class="p-2 text-center">{{ user.cpf }}</td>
         <td class="p-2 text-center">{{ user.tipo }}</td>
         <td class="p-2 flex gap-2 justify-center">
-          <button class="bg-[var(--color-accent)] p-2 rounded text-white hover:opacity-70">
+          <button class="bg-[var(--color-accent)] p-2 rounded text-white hover:opacity-70" (click)="openModalVisualizar(user.id)">
             <i class="bi bi-eye"></i>
           </button>
           <button class="bg-[var(--color-primary)] p-2 rounded text-white hover:opacity-70">
@@ -81,12 +73,30 @@
 
   <!-- Paginação -->
   <div class="flex justify-between mt-4">
-    <button (click)="prevPage()" class="px-3 py-1 border rounded" [disabled]="offset === 0">Anterior</button>
-    <button (click)="nextPage()" class="px-3 py-1 border rounded">Próximo</button>
+    <button
+      (click)="prevPage()"
+      class="px-3 py-1 border rounded"
+      [disabled]="!usuariosPage || usuariosPage.first"
+      [ngClass]="{
+      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !usuariosPage || usuariosPage.first,
+      'hover:bg-gray-100': usuariosPage && !usuariosPage.first
+    }">
+      Anterior
+    </button>
+
+    <button
+      (click)="nextPage()"
+      class="px-3 py-1 border rounded"
+      [disabled]="!usuariosPage || usuariosPage.last"
+      [ngClass]="{
+      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !usuariosPage || usuariosPage.last,
+      'hover:bg-gray-100': usuariosPage && !usuariosPage.last
+    }">
+      Próximo
+    </button>
   </div>
 
   <!-- Criar Usuário -->
-
   <div
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     *ngIf="showModal"
@@ -202,6 +212,66 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+
+  <!-- Visualizar Dados do Usuário-->
+
+  <div
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    *ngIf="showModalVisualizar"
+  >
+    <div class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg relative">
+      <div class="absolute top-2 right-2">
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="p-2 rounded hover:bg-gray-200"
+        >
+          <i class="bi bi-x-lg text-gray-600"></i>
+        </button>
+      </div>
+
+      <h2 class="text-xl font-semibold mb-4 text-center">Usuário</h2>
+
+        <!-- Email -->
+        <div class="mb-5 flex items-center gap-3">
+          <p class="m-0 block text-lg text-shadow-lg">Email:</p>
+          <p class="text-gray-500 m-0">{{ usuarioResponse?.email }}</p>
+          <i class="bi bi-envelope text-purple-600"></i>
+        </div>
+
+        <!-- Nome -->
+        <div class="mb-5 flex items-center gap-3">
+          <p class="m-0 block text-lg text-shadow-lg">Nome:</p>
+          <p class="text-gray-500 m-0">{{ usuarioResponse?.nome }}</p>
+          <i class="bi bi-person text-purple-600"></i>
+        </div>
+
+        <!-- CPF -->
+        <div class="mb-5 flex items-center gap-3">
+          <p class="m-0 block text-lg text-shadow-lg">CPF:</p>
+          <p class="text-gray-500 m-0">{{ usuarioResponse?.cpf }}</p>
+          <i class="bi bi-card-text text-purple-600"></i>
+        </div>
+
+        <!-- Ativo -->
+        <div class="mb-5 flex items-center gap-3">
+          <p class="m-0 block text-lg text-shadow-lg">Ativo:</p>
+          <p class="text-gray-500 m-0">{{usuarioResponse?.ativo ? 'Sim' : 'Nao'}}</p>
+          <i class="bi bi-check-lg text-purple-600"></i>
+        </div>
+
+        <!-- Tipo de Usuário -->
+        <div class="mb-5 flex items-center gap-3">
+          <p class="m-0 block text-lg text-shadow-lg ">Tipo de Usuário:</p>
+          <p class="text-gray-500 m-0">
+            {{ usuarioResponse?.tipo === 'ROLE_ADMINISTRADOR' ? 'Administrador' : 'Associado' }}
+          </p>
+          <i class="bi bi-briefcase text-purple-600"></i>
+        </div>
+
     </div>
   </div>
 

@@ -27,13 +27,16 @@ export class GerenciarUsuariosComponent implements OnInit{
 
   usuariosPage: PageResponseModel<UsuarioResponseModel> | null = null;
 
+  usuarioResponse: UsuarioResponseModel | null = null;
+
   selectedUserIds: number[] = [];
 
-  filters = { nome: '', cpf: '', genero: '' };
+  filters = { nome: '', cpf: ''};
   offset = 0;
   limit = 20;
 
   showModal = false;
+  showModalVisualizar = false;
 
   constructor(private service: UsuarioService, public router: Router) {}
 
@@ -55,6 +58,22 @@ export class GerenciarUsuariosComponent implements OnInit{
         });
       }
     });
+  }
+
+  loadUserBydId(id: number){
+    this.service.buscarPorId(id).subscribe({
+      next: data => {
+        this.usuarioResponse = data;
+      },
+      error: err => {
+        void Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar usuários',
+          text: 'Não foi possível carregar a lista de usuários.',
+          footer: err?.message ? `<small>${err.message}</small>` : ''
+        });
+      }
+    })
   }
 
   applyFilters() {
@@ -213,6 +232,12 @@ export class GerenciarUsuariosComponent implements OnInit{
 
   closeModal() {
     this.showModal = false;
+    this.showModalVisualizar = false;
+  }
+
+  openModalVisualizar(id: number) {
+    this.loadUserBydId(id);
+    this.showModalVisualizar = true;
   }
 
   protected readonly open = open;
