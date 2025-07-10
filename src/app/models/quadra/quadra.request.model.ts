@@ -1,7 +1,7 @@
 export interface QuadraRequest {
   id: number;
   nome: string;
-  tipoQuadra: number;
+  tipoQuadraId: number;
   quantidadeMaxima: number;
   foto_url: string;
 }

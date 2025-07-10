@@ -24,7 +24,7 @@ export class QuadraService {
     return this.http.get<QuadraResponseModel>(`${this.apiUrl}${id}`);
   }
 
-  create(quadra: QuadraRequest): Observable<string> {
+  create(quadra: Partial<QuadraRequest>): Observable<string> {
     return this.http.post(`${this.apiUrl}`, { ...quadra }, {responseType: 'text'});
   }
 

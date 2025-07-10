@@ -12,7 +12,7 @@ export class TipoQuadraService {
     return this.http.get<TipoQuadraModel[]>(`${this.apiUrl}`);
   }
 
-  create(tipo: TipoQuadraModel) {
+  create(tipo: Partial<TipoQuadraModel>) {
     return this.http.post(`${this.apiUrl}`, { ...tipo }, {responseType: 'text'});
   }
 }

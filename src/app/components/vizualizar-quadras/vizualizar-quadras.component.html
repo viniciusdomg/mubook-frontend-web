@@ -50,21 +50,22 @@
     </div>
   </div>
 
-  <div class="flex items-center justify-center gap-6 mb-[80px]">
+  <div class="flex items-center justify-center gap-6 mb-[80px]"  *ngIf="items && items.length > 0; else noQuadras">
 
-    <button (click)="goPrev()" class="p-2 bg-transparent rounded hover:!bg-[var(--color-section-bg)]">←</button>
+    <button *ngIf="items.length > 1" (click)="goPrev()" class="p-2 bg-transparent rounded hover:!bg-[var(--color-section-bg)]">←</button>
     <!-- Card anterior -->
     <div
+      *ngIf="items.length > 1"
       class="w-[220px] h-[150px] bg-white border border-gray-300 shadow-md flex cursor-pointer opacity-60 scale-90 transition"
       (click)="setActive(prevIndex())"
     >
       <div class="p-2 flex flex-col justify-center">
-        <p style="font-size: 12px; margin-bottom: 55px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].capMaxima }}</p>
-        <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[nextIndex()].tipo }}</p>
-<!--        <p style="font-size: 12px;"><strong>Tamanho:</strong> {{ items[nextIndex()].tamanho }}</p>-->
+        <p style="font-size: 12px; margin-bottom: 55px;"><strong>Cap. Máxima:</strong> {{ items[prevIndex()].quantidadeMaxima }}</p>
+        <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[prevIndex()].tipoQuadra!.nome }}</p>
+        <p style="font-size: 9px;"><strong>Nome:</strong> {{ items[prevIndex()].nome }}</p>
       </div>
       <img
-        [src]="'assets/images/' + items[prevIndex()].imagem"
+        [src]="items[prevIndex()].foto_url"
         alt="Imagem"
         class="w-[100px] h-full object-cover rounded-r"
       />
@@ -72,85 +73,110 @@
 
     <!-- Card ativo -->
     <div
+      *ngIf="items && items.length > 0"
       class="w-[680px] h-[370px] bg-white border border-red-500 shadow-lg flex cursor-default transition"
     >
-        <div class="p-6 flex flex-col justify-start text-lg h-full">
+      <div class="p-6 flex flex-col justify-start text-lg h-full">
         <p style="margin-bottom: 165px;" class="text-sm">
-            <strong>Capacidade Máxima:</strong> {{ items[activeIndex].capMaxima }}
+          <strong>Capacidade Máxima:</strong> {{ items[activeIndex].quantidadeMaxima }}
         </p>
-        <p class="text-2xl"><strong>Tipo da Quadra:</strong> {{ items[activeIndex].tipo }}</p>
-<!--        <p><strong>Tamanho:</strong> {{ items[activeIndex].tamanho }}</p>-->
-        </div>
+        <p class="text-2xl">
+          <strong>Tipo da Quadra:</strong> {{ items[activeIndex].tipoQuadra!.nome }}
+        </p>
+        <p class="text-1xl"><strong>Nome:</strong> {{ items[activeIndex].nome }}</p>
+      </div>
       <img
-        [src]="'assets/images/' + items[activeIndex].imagem"
+        [src]="items[activeIndex].foto_url"
         alt="Imagem"
         class="w-[400px] h-full object-cover rounded-r"
       />
     </div>
 
-
     <!-- Card próximo -->
     <div
+      *ngIf="items.length > 1"
       class="w-[220px] h-[150px] bg-white border border-gray-300 shadow-md flex cursor-pointer opacity-60 scale-90 transition"
       (click)="setActive(nextIndex())"
     >
       <div class="p-2 flex flex-col justify-center">
-        <p style="font-size: 12px; margin-bottom: 55px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].capMaxima }}</p>
-        <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[nextIndex()].tipo }}</p>
-<!--        <p style="font-size: 12px;"><strong>Tamanho:</strong> {{ items[nextIndex()].tamanho }}</p>-->
+        <p style="font-size: 12px; margin-bottom: 55px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].quantidadeMaxima }}</p>
+        <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[nextIndex()].tipoQuadra!.nome }}</p>
+        <p style="font-size: 9px;"><strong>Nome:</strong> {{ items[nextIndex()].nome }}</p>
       </div>
       <img
-        [src]="'assets/images/' + items[nextIndex()].imagem"
+        [src]="items[nextIndex()].foto_url"
         alt="Imagem"
         class="w-[100px] h-full object-cover rounded-r"
       />
     </div>
 
-    <button (click)="goNext()" class="p-2 bg-transparent rounded hover:!bg-[var(--color-section-bg)]">→</button>
+    <button *ngIf="items.length > 1" (click)="goNext()" class="p-2 bg-transparent rounded hover:!bg-[var(--color-section-bg)]">→</button>
   </div>
+
+  <ng-template #noQuadras>
+    <div
+      class="w-full h-[370px] bg-transparent flex items-center justify-center text-gray-500"
+    >
+      Nenhuma quadra cadastrada
+    </div>
+  </ng-template>
 
   <hr class="border-t border-gray-300 w-full m-16" />
 
   <table class="min-w-[1200px] border shadow-lg border-gray-200 mx-auto mt-[80px]">
     <thead class="bg-gray-100">
     <tr>
-      <th class="p-2 text-center">Tipo Quadra</th>
-      <th class="p-2 text-center">Quantidade Máx</th>
+      <th class="p-2 text-center w-[400px]">Tipo Quadra</th>
+      <th class="p-2 text-center w-[200px]">Quantidade Máx</th>
       <th class="p-2 text-center">ID</th>
-      <th class="p-2 text-center">Ações</th>
+      <th class="p-2 text-center w-[200px]">Ações</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let tipo of tipoQuadrasPage?.content" class="border-b">
-      <td class="p-2 text-center">{{ tipo.nome }}</td>
-      <td class="p-2 text-center">{{ tipo.quantidadeMaxima }}</td>
-      <td class="p-2 text-center">{{ tipo.id }}</td>
+    <tr *ngFor="let quadra of quadrasPage?.content" class="border-b">
+      <td class="p-2 text-center">{{ quadra.nome }}</td>
+      <td class="p-2 text-center">{{ quadra.quantidadeMaxima }}</td>
+      <td class="p-2 text-center">#{{ quadra.id }}</td>
       <td class="p-2 flex gap-2 justify-center">
-        <button class="bg-[var(--color-accent)] p-2 rounded text-white hover:opacity-70">
-          <i class="bi bi-eye"></i>
-        </button>
         <button class="bg-[var(--color-primary)] p-2 rounded text-white hover:opacity-70">
           <i class="bi bi-pencil"></i>
         </button>
-        <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(tipo.id)">
+        <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(quadra.id)">
           <i class="bi bi-trash"></i>
         </button>
       </td>
     </tr>
-    <tr *ngIf="!tipoQuadrasPage?.content || (tipoQuadrasPage?.content?.length ?? 0) === 0">
+    <tr *ngIf="!quadrasPage?.content || (quadrasPage?.content?.length ?? 0) === 0">
       <td colspan="5" class="p-4 text-center text-gray-500 italic">
-        Nenhum tipo de quadra cadastrado
+        Nenhuma quadra cadastrada
       </td>
     </tr>
     </tbody>
   </table>
 
   <div class="w-[1200px] mx-auto flex justify-between mt-4">
-    <button (click)="prevPage()" class="px-3 py-1 border rounded" [disabled]="offset === 0">Anterior</button>
-    <button (click)="nextPage()" class="px-3 py-1 border rounded">Próximo</button>
+    <button
+      (click)="prevPage()"
+      class="px-3 py-1 border rounded"
+      [disabled]="!quadrasPage || quadrasPage.first"
+      [ngClass]="{
+      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !quadrasPage || quadrasPage.first,
+      'hover:bg-gray-100': quadrasPage && !quadrasPage.first
+    }">
+      Anterior
+    </button>
+
+    <button
+      (click)="nextPage()"
+      class="px-3 py-1 border rounded"
+      [disabled]="!quadrasPage || quadrasPage.last"
+      [ngClass]="{
+      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !quadrasPage || quadrasPage.last,
+      'hover:bg-gray-100': quadrasPage && !quadrasPage.last
+    }">
+      Próximo
+    </button>
   </div>
-
-
 
   <div
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -215,7 +241,7 @@
           </div>
         </div>
 
-        <!-- CPF -->
+        <!-- Quantidade máxima -->
         <div class="mb-4">
           <label class="block text-sm mb-1">Capacidade Máx</label>
           <div class="relative">
@@ -233,32 +259,52 @@
         </div>
 
         <!-- Tipo de quadra -->
-        <div class="mb-5">
+        <div class="mb-5 relative">
           <label class="block text-sm mb-1">Tipo de Quadra</label>
           <div class="relative">
-            <select
-              [(ngModel)]="request.tipoQuadra"
-              name="tipoQuadra"
-              required
-              class="border rounded w-full pl-11 pr-3 py-2"
-            >
-              <option value="" disabled selected>Escolha um tipo</option>
-              <option *ngFor="let tipo of tipos" [value]="tipo.id">{{ tipo.nome }}</option>
-            </select>
+            <input
+              type="text"
+              [(ngModel)]="tipoText"
+              name="tipoText"
+              (input)="onInput(tipoText)"
+              class="border rounded w-full pl-11 pr-3 py-2 placeholder-gray-400"
+              placeholder="Digite ou selecione um tipo"
+            />
             <div
               class="absolute left-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded"
             >
               <i class="bi bi-grid text-white"></i>
             </div>
+
+            <!-- Dropdown -->
+            <ul
+              *ngIf="filteredTipos.length || showAddOption"
+              class="absolute z-10 p-0 mt-1 w-full bg-gray-100 border rounded shadow max-h-60 overflow-y-auto"
+            >
+              <li
+                *ngFor="let tipo of filteredTipos"
+                (click)="selectTipo(tipo)"
+                class="px-3 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {{ tipo.nome }}
+              </li>
+              <li
+                *ngIf="showAddOption"
+                (click)="createTipoQuadra()"
+                class="px-3 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                <i class="bi bi-check-lg text-green-500"></i> Esse tipo não existe, adicionar "{{ tipoText }}"
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div class="flex justify-center">
+        <div class="flex justify-center mt-[30px]">
           <button
             type="submit"
             class="bg-[var(--color-primary)] text-white px-4 py-2 rounded"
           >
-            Criar novo Quadra
+            Criar nova Quadra
           </button>
         </div>
       </form>

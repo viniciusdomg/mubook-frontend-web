@@ -1,41 +1,48 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
+import { MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatInputModule} from '@angular/material/input';
+import { MatFormFieldModule} from '@angular/material/form-field';
+import { MatOptionModule} from '@angular/material/core';
+import Swal from 'sweetalert2';
 import {PageResponseModel} from '../../models/page.response.model';
 import {QuadraRequest} from '../../models/quadra/quadra.request.model';
 import {TipoQuadraModel} from '../../models/quadra/tipo.quadra.model';
 import {QuadraService} from '../../services/quadra.service';
 import {TipoQuadraService} from '../../services/tipo.quadra.service';
-import Swal from 'sweetalert2';
 import {QuadraResponseModel} from '../../models/quadra/quadra.response.model';
 import {USER_ROLES} from '../../models/gerenciar-usuarios/usuario.request.model';
+import {UploadService} from '../../services/upload.service';
 
 @Component({
   selector: 'app-vizualizar-quadras',
-  imports: [FormsModule, NgForOf, NgIf],
+  imports: [FormsModule, NgForOf, NgIf, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatOptionModule, NgClass],
   templateUrl: './vizualizar-quadras.component.html',
   styleUrl: './vizualizar-quadras.component.css'
 })
 export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
 
-  constructor(private service: QuadraService, private tipoService: TipoQuadraService) {}
+  constructor(private service: QuadraService, private tipoService: TipoQuadraService,
+              private uploadService: UploadService) {}
 
-  request: QuadraRequest = {
-    id: 0,
+  request: Partial<QuadraRequest> = {
     nome: '',
+    tipoQuadraId: 0,
     quantidadeMaxima: 0,
-    tipoQuadra: 0,
     foto_url: ''
   }
 
-  tiposRequest: TipoQuadraModel = {
-    id: 0,
+  tiposRequest: Partial<TipoQuadraModel> = {
     nome: '',
   }
 
   quadrasPage: PageResponseModel<QuadraResponseModel> | null = null;
 
   tipos: TipoQuadraModel[] = [];
+  filteredTipos: any [] = [];
+  tipoText: string = '';
+  showAddOption = false;
 
   idSelecionado: number | null = null;
   selectedUserIds: number[] = [];
@@ -50,38 +57,7 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
   selectedFileName: string | null = null;
   selectedFile: File | null = null;
 
-  items = [
-    {
-      capMaxima: 20,
-      tipo: 'Futsal',
-      tamanho: '40x20 m',
-      imagem: 'imagem-quadra.png'
-    },
-    {
-      capMaxima: 10,
-      tipo: 'Vôlei',
-      tamanho: '18x9 m',
-      imagem: 'imagem-quadra.png'
-    },
-    {
-      capMaxima: 15,
-      tipo: 'Basquete',
-      tamanho: '28x15 m',
-      imagem: 'imagem-quadra.png'
-    },
-    {
-      capMaxima: 4,
-      tipo: 'Tênis',
-      tamanho: '23.77x8.23 m',
-      imagem: 'imagem-quadra.png'
-    },
-    {
-      capMaxima: 12,
-      tipo: 'Areia',
-      tamanho: '16x8 m',
-      imagem: 'imagem-quadra.png'
-    }
-  ];
+  items: QuadraResponseModel[] = [];
 
   activeIndex = 0;
   // private interval: any;
@@ -102,6 +78,7 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
     this.service.getQuadras(this.filters, this.offset, this.limit).subscribe({
       next: data => {
         this.quadrasPage = data;
+        this.items = data.content;
       },
       error: err => {
         void Swal.fire({
@@ -148,7 +125,12 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
           totalPages: 1,
           size: 1,
           number: 0,
+          first: true,
+          last: true,
+          empty: false,
         };
+        this.items = [];
+        this.items.push(data);
       },
       error: err => {
         void Swal.fire({
@@ -159,25 +141,6 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
         });
       }
     })
-  }
-
-  selectAll(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const checked = input.checked;
-
-    if (checked && this.quadrasPage?.content) {
-      this.selectedUserIds = this.quadrasPage.content.map(u => u.id);
-    } else {
-      this.selectedUserIds = [];
-    }
-  }
-
-  toggleSelection(id: number) {
-    if (this.selectedUserIds.includes(id)) {
-      this.selectedUserIds = this.selectedUserIds.filter(i => i !== id);
-    } else {
-      this.selectedUserIds.push(id);
-    }
   }
 
   deleteOne(id: number) {
@@ -241,33 +204,68 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.request.foto_url = this.selectedFileName!;
+    this.uploadService.uploadFile(this.selectedFile!).subscribe({
+      next: (url) => {
+        this.request.foto_url = url;
 
-    this.service.create(this.request).subscribe({
-      next: res => {
-        void Swal.fire({
-          icon: 'success',
-          title: 'Sucesso',
-          text: res && true ? res : 'Quadra cadastrado com sucesso!',
-          timer: 2000,
-          timerProgressBar: true,
+        this.service.create(this.request).subscribe({
+          next: res => {
+            void Swal.fire({
+              icon: 'success',
+              title: 'Sucesso',
+              text: res && true ? res : 'Quadra cadastrada com sucesso!',
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.loadQuadras();
+            this.loadTipos();
+            this.closeModal();
+          },
+          error: err => {
+            void Swal.fire({
+              icon: 'error',
+              title: 'Erro ao Cadastrar Quadra',
+              text: 'Não foi possível cadastrar a quadra.',
+              footer: err?.message ? `<small>${err.message}</small>` : ''
+            });
+          }
         });
-        this.loadQuadras();
-        this.loadTipos();
-        this.closeModal();
       },
-      error: err => {
+      error: (err) => {
         void Swal.fire({
           icon: 'error',
-          title: 'Erro ao Cadastrar Quadra',
-          text: 'Não foi possível cadastrar quadra.',
-          footer: err?.message ? `<small>${err.message}</small>` : ''
+          title: 'Erro ao enviar imagem',
+          text: err?.message ?? 'Não foi possível fazer upload.'
         });
       }
     });
   }
 
+  onInput(value: string) {
+    if (!value) {
+      this.filteredTipos = this.tipos;
+      this.showAddOption = false;
+      return;
+    }
+
+    const filterValue = value.toLowerCase().trim();
+    this.filteredTipos = this.tipos.filter(tipo =>
+      tipo.nome.toLowerCase().includes(filterValue)
+    );
+
+    this.showAddOption = filterValue.length > 0 &&
+      !this.tipos.some(tipo => tipo.nome.toLowerCase() === filterValue);
+  }
+
+  selectTipo(tipo: TipoQuadraModel) {
+    this.tipoText = tipo.nome;
+    this.request.tipoQuadraId = tipo.id;
+    this.filteredTipos = [];
+    this.showAddOption = false;
+  }
+
   createTipoQuadra(){
+    this.tiposRequest.nome = this.tipoText.trim()
     this.tipoService.create(this.tiposRequest).subscribe({
       next: res => {
         void Swal.fire({
@@ -277,9 +275,9 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
           timer: 2000,
           timerProgressBar: true,
         });
-        this.loadQuadras();
         this.loadTipos();
         this.closeModal();
+        this.openModalUpdate();
       },
       error: err => {
         void Swal.fire({
@@ -296,7 +294,7 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
     this.request = {
       id: 0,
       nome: '',
-      tipoQuadra: 0,
+      tipoQuadraId: 0,
       quantidadeMaxima: 0,
       foto_url: ''
     };
@@ -304,13 +302,6 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
   }
 
   openModalUpdate() {
-    this.request = {
-      id: 0,
-      nome: '',
-      tipoQuadra: 0,
-      quantidadeMaxima: 0,
-      foto_url: ''
-    };
     this.showModal = true;
   }
 
