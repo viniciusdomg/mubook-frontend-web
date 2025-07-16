@@ -13,6 +13,6 @@ export class PerfilService {
   }
 
   salvar(pessoa: PerfilRequestModel) {
-    return this.http.post<PerfilRequestModel>(`${this.apiUrl}`, { ...pessoa });
+    return this.http.put(`${this.apiUrl}`, { ...pessoa }, {responseType: "text"});
   }
 }

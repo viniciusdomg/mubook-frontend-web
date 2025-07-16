@@ -2,7 +2,7 @@
   display: flex;
   width: 100%;
   height: 100%;
-  background-color: rgba(70, 66, 85, 0.1);
+  background-color: #ececee;
   border-top: 1px solid rgb(202, 202, 202);
   border-left: 1px solid rgb(202, 202, 202);
 }

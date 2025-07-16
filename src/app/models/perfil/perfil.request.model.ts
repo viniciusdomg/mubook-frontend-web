@@ -1,5 +1,6 @@
 export interface PerfilRequestModel {
   id: number;
+  foto_url: string;
   nome: string;
   cpf: string;
   email: string;

@@ -5,21 +5,39 @@
 
       <!-- Imagem -->
       <div class="col-span-2 flex flex-col items-center mb-2">
-        <div class="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center">
-          <i class="bi bi-person fs-1 text-gray-500"></i>
+        <div class="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center hover:border-[var(--color-primary)] cursor-pointer transition shadow  "
+          (click)="fileInput.click()"
+        >
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            class="hidden"
+          />
+          <i *ngIf="!perfil.foto_url" class="bi bi-person fs-1 text-gray-500"></i>
+
+          <img *ngIf="perfil.foto_url"
+               [src]="perfil.foto_url"
+               alt="Preview da imagem"
+               class="w-full h-full object-cover rounded-full" />
         </div>
-        <button type="button" class="mt-2 text-indigo-600 hover:underline">
-          Selecionar imagem
-        </button>
+        <ng-container *ngIf="!perfil.foto_url">
+          <span class="text-gray-500 mt-2">Selecione a imagem</span>
+        </ng-container>
+
+        <span class="text-gray-700 mt-2 text-sm" *ngIf="selectedFileName">{{ selectedFileName }}</span>
       </div>
 
       <!-- Nome completo -->
       <div>
-        <label class="text-sm font-medium text-gray-600 mb-1 block">Nome completo</label>
+        <label class="text-sm font-medium text-gray-600 mb-1 block">Nome completo<span class="text-red-800">*</span></label>
         <div class="relative">
           <input type="text" name="nome" [(ngModel)]="perfil.nome"
                  placeholder="Nome completo"
-                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none" />
+                 required
+                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+          />
           <div class="absolute right-0 top-0 h-full w-10">
             <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
               <i class="bi bi-person text-white text-lg"></i>
@@ -30,11 +48,13 @@
 
       <!-- Email -->
       <div>
-        <label class="text-sm font-medium text-gray-600 mb-1 block">Email</label>
+        <label class="text-sm font-medium text-gray-600 mb-1 block">Email<span class="text-red-800">*</span></label>
         <div class="relative">
           <input type="email" name="email" [(ngModel)]="perfil.email"
                  placeholder="Email"
-                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none" />
+                 required
+                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+          />
           <div class="absolute right-0 top-0 h-full w-10">
             <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
               <i class="bi bi-envelope text-white text-lg"></i>
@@ -48,7 +68,9 @@
         <label class="text-sm font-medium text-gray-600 mb-1 block">Data de Nascimento</label>
         <div class="relative">
           <input type="date" name="dataNascimento" [(ngModel)]="perfil.dataNascimento"
-                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none" />
+                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none
+  placeholder-gray-400 cursor-text"
+          />
           <div class="absolute right-0 top-0 h-full w-10">
             <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
               <i class="bi bi-calendar-date text-white text-lg"></i>
@@ -63,6 +85,7 @@
         <div class="relative">
           <select name="genero" [(ngModel)]="perfil.genero"
                   class="w-full py-3 px-4 rounded text-sm pr-12 bg-gray-100 border-none focus:outline-none">
+            <option value="" disabled selected>Selecione um gênero</option>
             <option value="Masculino">Masculino</option>
             <option value="Feminino">Feminino</option>
             <option value="Outro">Outro</option>
@@ -77,11 +100,13 @@
 
       <!-- CPF -->
       <div>
-        <label class="text-sm font-medium text-gray-600 mb-1 block">CPF</label>
+        <label class="text-sm font-medium text-gray-600 mb-1 block">CPF<span class="text-red-800">*</span></label>
         <div class="relative">
           <input type="text" name="cpf" [(ngModel)]="perfil.cpf"
                  placeholder="000.000.000-00"
-                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none" />
+                 required
+                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+          />
           <div class="absolute right-0 top-0 h-full w-10">
             <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
               <i class="bi bi-credit-card-2-front text-white text-lg"></i>
@@ -96,7 +121,8 @@
         <div class="relative">
           <input type="text" name="cep" [(ngModel)]="perfil.cep"
                  placeholder="00000-000"
-                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none" />
+                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+          />
           <div class="absolute right-0 top-0 h-full w-10">
             <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
               <i class="bi bi-geo-alt text-white text-lg"></i>
@@ -111,7 +137,8 @@
         <div class="relative">
           <input type="text" name="endereco" [(ngModel)]="perfil.endereco"
                  placeholder="Rua Exemplo, número 123"
-                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none" />
+                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+          />
           <div class="absolute right-0 top-0 h-full w-10">
             <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
               <i class="bi bi-signpost-2 text-white text-lg"></i>
@@ -126,7 +153,8 @@
         <div class="relative">
           <input type="text" name="complemento" [(ngModel)]="perfil.complemento"
                  placeholder="Apartamento, bloco 10"
-                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none" />
+                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+          />
           <div class="absolute right-0 top-0 h-full w-10">
             <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
               <i class="bi bi-pencil text-white text-lg"></i>
@@ -141,7 +169,8 @@
         <div class="relative">
           <input type="text" name="telefone" [(ngModel)]="perfil.telefone"
                  placeholder="(84) 90101-0202"
-                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none" />
+                 class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+          />
           <div class="absolute right-0 top-0 h-full w-10">
             <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
               <i class="bi bi-telephone text-white text-lg"></i>
@@ -159,6 +188,7 @@
         </button>
       </div>
     </form>
-
   </div>
 </div>
+<div class="h-[50px]"></div>
+

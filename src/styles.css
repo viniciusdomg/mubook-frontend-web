@@ -23,13 +23,14 @@
   /* Sombras (RGB) */
   --shadow-button: 0 5px 10px rgba(92, 46, 198, 0.3);
   --shadow-section: 1px 0 10px rgba(0, 0, 0, 0.05);
-
 }
 
 html, body {
-    height: 100%;
+  height: 100%;
+  margin: 0;
+  background-color: #ececee;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Remove as setas do input number no Chrome, Safari, Edge, Opera */
 input[type="number"]::-webkit-inner-spin-button,

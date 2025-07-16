@@ -1,25 +1,32 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {PerfilService} from '../../services/perfil.service';
 import Swal from 'sweetalert2';
 import {PerfilRequestModel} from '../../models/perfil/perfil.request.model';
+import {UploadService} from '../../services/upload.service';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-perfil',
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
   standalone: true
 })
-export class PerfilComponent {
+export class PerfilComponent implements OnInit{
+
   perfil!: PerfilRequestModel;
   carregando = false;
 
-  constructor(private service: PerfilService) {}
+  selectedFileName: String | null = null;
+  selectedFile: File | null = null;
+
+  constructor(private service: PerfilService, private uploadService: UploadService) {}
 
   ngOnInit(): void {
     this.perfil = {
       id: 0,
+      foto_url: '',
       nome: '',
       email: '',
       dataNascimento: '',
@@ -35,8 +42,12 @@ export class PerfilComponent {
   }
 
   carregarDadosPerfil(): void {
+    this.carregando = true
     this.service.getDados().subscribe({
-      next: (data) => this.perfil = data,
+      next: (data) => {
+        this.perfil = data;
+        this.carregando = false;
+      },
       error: (err) => {
         void Swal.fire({
           icon: 'error',
@@ -44,23 +55,41 @@ export class PerfilComponent {
           text: 'Não foi possível carregar seus dados. Tente novamente mais tarde.',
           footer: err?.message ? `<small>${err.message}</small>` : ''
         });
+        this.carregando = false;
       }
     });
   }
 
   salvar(): void {
+    if (this.selectedFileName && this.selectedFile) {
+      this.uploadService.uploadFile(this.selectedFile!).subscribe({
+        next: data => {
+          this.perfil.foto_url = data;
+        },
+        error: err => {
+          void Swal.fire({
+            icon: 'error',
+            title: 'Erro ao salvar',
+            text: 'Ocorreu um erro ao atualizar seu perfil.',
+            footer: err?.message ? `<small>${err.message}</small>` : ''
+          });
+          return
+        }
+      })
+    }
 
     const dados: PerfilRequestModel = this.perfil;
-    this.carregando = true;
 
     this.service.salvar(dados).subscribe({
-      next: () => {
+      next: res => {
         void Swal.fire({
           icon: 'success',
           title: 'Sucesso',
-          text: 'Informações salvas com sucesso!'
+          text: res && true ? res : 'Dados atualizados com sucesso!',
+          timer: 2000,
+          timerProgressBar: true,
         });
-        this.carregando = false;
+        this.carregarDadosPerfil();
       },
       error: (err) => {
         void Swal.fire({
@@ -69,9 +98,21 @@ export class PerfilComponent {
           text: 'Ocorreu um erro ao atualizar seu perfil.',
           footer: err?.message ? `<small>${err.message}</small>` : ''
         });
-        this.carregando = false;
       }
     });
   }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.selectedFileName = this.selectedFile.name;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.perfil.foto_url = reader.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
 }
