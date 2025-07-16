@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import {PerfilRequestModel} from '../../models/perfil/perfil.request.model';
 import {UploadService} from '../../services/upload.service';
 import {NgIf} from '@angular/common';
+import {CepService} from "../../services/cep.service";
 
 @Component({
   selector: 'app-perfil',
@@ -21,7 +22,11 @@ export class PerfilComponent implements OnInit{
   selectedFileName: String | null = null;
   selectedFile: File | null = null;
 
-  constructor(private service: PerfilService, private uploadService: UploadService) {}
+  cepInvalido = false;
+  carregandoCEP = false;
+
+  constructor(private service: PerfilService, private uploadService: UploadService,
+              private cepService: CepService,) {}
 
   ngOnInit(): void {
     this.perfil = {
@@ -113,6 +118,28 @@ export class PerfilComponent implements OnInit{
         this.perfil.foto_url = reader.result as string;
       };
       reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  buscarCEP() {
+    if (this.perfil.cep.length === 8) {
+      this.carregandoCEP = true;
+      this.cepInvalido = false;
+
+      this.cepService.buscarCep(this.perfil.cep)
+          .then((data: any) => {
+            this.carregandoCEP = false;
+            this.cepInvalido = false;
+
+            if (data) {
+              this.perfil.endereco = data.logradouro;
+              this.perfil.complemento = data.complemento;
+            }
+          })
+          .catch(() => {
+            this.carregandoCEP = false;
+            this.cepInvalido = true;
+          });
     }
   }
 }
