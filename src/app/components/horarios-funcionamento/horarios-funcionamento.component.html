@@ -59,5 +59,64 @@
     </button>
   </form>
 
+  <hr class="border-t border-gray-300 w-full" />
+
+  <table class="w-full table-fixed border shadow-lg border-gray-200">
+    <thead class="bg-gray-100">
+    <tr>
+      <th class="p-2 text-center">Tipo de Quadra</th>
+      <th class="p-2 text-center"> Dias da semana</th>
+      <th class="p-2 text-center">Horário Abertura</th>
+      <th class="p-2 text-center">Horário Fechamento</th>
+      <th class="p-2 text-center">Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let horario of horariosPage?.content" class="border-b">
+      <td class="p-2 text-center">{{ horario.tipoQuadra.nome }}</td>
+      <td class="p-2 text-center">{{ horario.diasSemana }}</td>
+      <td class="p-2 text-center">{{ horario.horarioAbertura }}</td>
+      <td class="p-2 text-center">{{ horario.horarioFechamento }}</td>
+      <td class="p-2 flex gap-2 justify-center">
+        <button class="bg-[var(--color-primary)] p-2 rounded text-white hover:opacity-70">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(horario.id)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="!horariosPage?.content || (horariosPage?.content?.length ?? 0) === 0">
+      <td colspan="6" class="p-4 text-center text-gray-500 italic">
+        Nenhum horário cadastrado
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="flex justify-between mt-4 ">
+    <button
+      (click)="prevPage()"
+      class="px-3 py-1 border rounded"
+      [disabled]="!horariosPage || horariosPage.first"
+      [ngClass]="{
+      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !horariosPage || horariosPage.first,
+      'hover:bg-gray-100': horariosPage && !horariosPage.first
+    }">
+      Anterior
+    </button>
+
+    <button
+      (click)="nextPage()"
+      class="px-3 py-1 border rounded"
+      [disabled]="!horariosPage || horariosPage.last"
+      [ngClass]="{
+      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !horariosPage || horariosPage.last,
+      'hover:bg-gray-100': horariosPage && !horariosPage.last
+    }">
+      Próximo
+    </button>
+  </div>
+
   <div class="h-[10px]"></div>
 </div>
