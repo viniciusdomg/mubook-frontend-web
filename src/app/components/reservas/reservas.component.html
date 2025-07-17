@@ -4,15 +4,14 @@
     <div class="flex items-center gap-4 mb-6">
       <p class="text-lg text-gray-700 w-[120px] whitespace-nowrap">Tipo de quadra:</p>
       <select
-        [(ngModel)]="quadraSelecionada"
+        [(ngModel)]="tipoQuadraSelecionada"
         class="border border-gray-300 rounded px-4 py-2 w-[280px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
       >
-        <option value="" disabled>Selecione o tipo de quadra</option>
-        <option value="futsal">Futsal</option>
-        <option value="volei">Vôlei</option>
-        <option value="basquete">Basquete</option>
-        <option value="tenis">Tênis</option>
-        <option value="areia">Areia</option>
+        <option [value]="0" selected disabled>Selecione...</option>
+        <option *ngFor="let tipo of tiposQuadra" [value]="tipo.id">
+          {{ tipo.nome }}
+        </option>
+        <option [value]="0">Todos</option>
       </select>
     </div>
 
@@ -38,12 +37,15 @@
 
     <button
       class="bg-[#6D71FF] text-white px-6 py-2 rounded hover:bg-[#5a5ee0] transition"
+      (click)="loadReservasDisponiveis()"
     >
-      Filtrar Reservas
+      Buscar
     </button>
   </div>
 
-  <div class="mt-20">
+
+
+  <div class="mt-20" *ngIf="reservasDisponiveis && reservasDisponiveis.length > 0; else   noReservas">
     <div class="flex items-center justify-center gap-4 mt-16">
 
       <!-- Botão voltar -->
@@ -57,52 +59,72 @@
       <!-- Anterior do anterior -->
       <div
         class="w-[140px] h-[85px] bg-white border border-gray-300 shadow flex flex-col items-center justify-center opacity-40 scale-75 cursor-pointer p-1 text-xs text-center text-green-600"
-        (click)="setActive2((prevIndex2() - 1 + items2.length) % items2.length)"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length])
+        }"
+        (click)="setActive2((prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length)"
       >
-        {{ items2[(prevIndex2() - 1 + items2.length) % items2.length].quadra }}
-        {{ items2[(prevIndex2() - 1 + items2.length) % items2.length].data }}
-        {{ items2[(prevIndex2() - 1 + items2.length) % items2.length].hora }}
+        {{ reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length].quadra.nome }}
+        {{extData(reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length].dataHora) }}
+        {{extHora(reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length].dataHora) }}
       </div>
 
       <!-- Anterior -->
       <div
         class="w-[200px] h-[120px] bg-white border border-gray-300 shadow-md flex flex-col items-center justify-center opacity-55 scale-100 cursor-pointer p-2 text-center text-green-600"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[prevIndex2()]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[prevIndex2()])
+        }"
         (click)="setActive2(prevIndex2())"
       >
-        <p class="mb-0 py-1">Quadra: {{ items2[prevIndex2()].quadra }}</p>
-        <p class="mb-0 py-1">Data: {{ items2[prevIndex2()].data }}</p>
-        <p class="mb-0 py-1">Hora: {{ items2[prevIndex2()].hora }}</p>
+        <p class="mb-0 py-1">Quadra: {{ reservasDisponiveis[prevIndex2()].quadra.nome }}</p>
+        <p class="mb-0 py-1">Data: {{ extData(reservasDisponiveis[prevIndex2()].dataHora)}}</p>
+        <p class="mb-0 py-1">Hora: {{ extHora(reservasDisponiveis[prevIndex2()].dataHora) }}</p>
       </div>
 
       <!-- Ativo -->
       <div
         class="w-[260px] h-[190px] bg-white border border-red-500 shadow-lg flex flex-col items-center justify-center p-2 text-center text-green-600"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[activeIndex]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[activeIndex])
+        }"
       >
-        <h3 class="mb-2 font-bold text-lg">Quadra: {{ items2[activeIndex2].quadra }}</h3>
-        <p>Data: {{ items2[activeIndex2].data }}</p>
-        <p>Hora: {{ items2[activeIndex2].hora }}</p>
-        <p>até {{ items2[prevIndex2()].convidados }} convidados</p>
+        <h3 class="mb-2 font-bold text-lg">Quadra: {{ reservasDisponiveis[activeIndex].quadra.nome }}</h3>
+        <p>Data: {{ extData(reservasDisponiveis[activeIndex].dataHora)}}</p>
+        <p>Hora: {{ extHora(reservasDisponiveis[activeIndex].dataHora)}}</p>
+        <p>até {{ reservasDisponiveis[prevIndex2()].quadra.quantidadeMaxima - 1 }} convidados</p>
       </div>
 
       <!-- Próximo -->
       <div
         class="w-[200px] h-[120px] bg-white border border-gray-300 shadow-md flex flex-col items-center justify-center opacity-55 scale-100 cursor-pointer p-2 text-center text-green-600"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[nextIndex2()]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[nextIndex2()])
+        }"
         (click)="setActive2(nextIndex2())"
       >
-        <p class="mb-0 py-1">Quadra: {{ items2[nextIndex2()].quadra }}</p>
-        <p class="mb-0 py-1">Data: {{ items2[nextIndex2()].data }}</p>
-        <p class="mb-0 py-1">Hora: {{ items2[nextIndex2()].hora }}</p>
-  <!--      <p>Convidados: {{ items2[prevIndex2()].convidados }}</p>-->
+        <p class="mb-0 py-1">Quadra: {{ reservasDisponiveis[nextIndex2()].quadra.nome }}</p>
+        <p class="mb-0 py-1">Data: {{ extData(reservasDisponiveis[nextIndex2()].dataHora)}}</p>
+        <p class="mb-0 py-1">Hora: {{ extHora(reservasDisponiveis[nextIndex2()].dataHora)}}</p>
+  <!--      <p>Convidados: {{ reservasDisponiveis[prevIndex2()].convidados }}</p>-->
       </div>
 
       <!-- Próximo do próximo -->
       <div
         class="w-[140px] h-[85px] bg-white border border-gray-300 shadow flex flex-col items-center justify-center opacity-40 scale-75 cursor-pointer p-1 text-xs text-center text-green-600"
-        (click)="setActive2((nextIndex2() + 1) % items2.length)"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[(nextIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[(nextIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length])
+        }"
+        (click)="setActive2((nextIndex2() + 1) % reservasDisponiveis.length)"
       >
-        {{ items2[(nextIndex2() + 1) % items2.length].quadra }}
-        {{ items2[(nextIndex2() + 1) % items2.length].data }}
-        {{ items2[(nextIndex2() + 1) % items2.length].hora }}
+        {{ reservasDisponiveis[(nextIndex2() + 1) % reservasDisponiveis.length].quadra.nome }}
+        {{ extData(reservasDisponiveis[(nextIndex2() + 1) % reservasDisponiveis.length].dataHora) }}
+        {{ extHora(reservasDisponiveis[(nextIndex2() + 1) % reservasDisponiveis.length].dataHora) }}
       </div>
 
       <!-- Botão avançar -->
@@ -114,6 +136,16 @@
       </button>
     </div>
   </div>
+
+  <ng-template #noReservas>
+    <div
+      class="w-full h-[270px] bg-transparent flex items-center justify-center text-gray-500"
+    >
+      Nenhuma reserva disponível
+    </div>
+  </ng-template>
+
+
 
   <hr class="border-t border-gray-300 w-full" />
   <p class="ml-[150px] text-2xl ">Histórico de Reservas</p>
@@ -129,10 +161,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let reserva of items2">
+      <tr *ngFor="let reserva of reservasDisponiveis">
         <td class="px-4 py-2 border">{{ reserva.quadra }}</td>
-        <td class="px-4 py-2 border">{{ reserva.data }}</td>
-        <td class="px-4 py-2 border">{{ reserva.hora }}</td>
+        <td class="px-4 py-2 border">{{ reserva.dataHora }}</td>
+        <td class="px-4 py-2 border">{{ reserva }}</td>
         <td class="px-4 py-2 border">
           <span
             class="px-2 py-1 rounded text-white"

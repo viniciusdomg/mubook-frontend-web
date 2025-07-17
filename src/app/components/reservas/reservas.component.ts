@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {ReservasDisponiveisResponse} from '../../models/reservas/reservas.disponiveis.response';
+import {ReservaService} from '../../services/reserva.service';
+import {TipoQuadraService} from '../../services/tipo.quadra.service';
+import Swal from 'sweetalert2';
+import {TipoQuadraModel} from '../../models/quadra/tipo.quadra.model';
 
 @Component({
   selector: 'app-reservas',
@@ -11,23 +16,21 @@ import { CommonModule } from '@angular/common';
 })
 export class ReservasComponent implements OnInit {
 
-  quadraSelecionada: string = '';
+  constructor(private service: ReservaService, private tipoService: TipoQuadraService) {}
+
+  reservasDisponiveis: ReservasDisponiveisResponse[] = [];
+
+  tiposQuadra: TipoQuadraModel[] = [];
+
+
+  tipoQuadraSelecionada: number = 0;
   dataSelecionada: string = '';
-  convidados: number | null = null;
   dataMinima: string = '';
 
   horaSelecionada: string = '';
   horasDisponiveis: string[] =[]
 
-  items2 = [
-    { nome: 'Reserva 1', quadra: 'Futsal', data: '05-07-2025', hora: '18:00', convidados: 10 },
-    { nome: 'Reserva 2', quadra: 'Vôlei', data: '06-07-2025', hora: '20:00', convidados: 8 },
-    { nome: 'Reserva 3', quadra: 'Basquete', data: '07-07-2025', hora: '19:00', convidados: 12 },
-    { nome: 'Reserva 4', quadra: 'Tênis', data: '08-07-2025', hora: '16:00', convidados: 4 },
-    { nome: 'Reserva 5', quadra: 'Areia', data: '09-07-2025', hora: '17:00', convidados: 6 }
-  ];
-
-  activeIndex2 = 0;
+  activeIndex = 0;
 
   ngOnInit() {
     const hoje = new Date();
@@ -36,35 +39,84 @@ export class ReservasComponent implements OnInit {
     const dia = String(hoje.getDate()).padStart(2, '0');
     this.dataMinima = `${ano}-${mes}-${dia}`;
 
-    setInterval(() => {
-      this.goNext2();
-    }, 5000);
+    this.loadReservasDisponiveis()
+    this.loadTipos()
+
+    // setInterval(() => {
+    //   this.goNext2();
+    // }, 5000);
+  }
+
+  loadReservasDisponiveis() {
+    this.service.getReservasDisponiveis(this.tipoQuadraSelecionada,this.dataSelecionada, this.horaSelecionada)
+      .subscribe({
+        next: (data) => {
+          this.reservasDisponiveis = data;
+          console.log(this.reservasDisponiveis);
+        },
+        error: err => {
+          void Swal.fire({
+            icon: 'error',
+            title: 'Erro ao carregar Tipos de Quadras',
+            text: 'Não foi possível carregar a lista de tipos de quadras.',
+            footer: err?.message ? `<small>${err.message}</small>` : '',
+          });
+        }
+      })
+  }
+
+  loadTipos(): void {
+    this.tipoService.loadTipos().subscribe({
+      next: (data) => (this.tiposQuadra = data),
+      error: (err) => {
+        void Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar Tipos de Quadras',
+          text: 'Não foi possível carregar a lista de tipos de quadras.',
+          footer: err?.message ? `<small>${err.message}</small>` : '',
+        });
+      },
+    });
   }
 
   setActive2(index: number) {
-    this.activeIndex2 = (index + this.items2.length) % this.items2.length;
+    this.activeIndex = (index + this.reservasDisponiveis.length) % this.reservasDisponiveis.length;
   }
 
   goPrev2() {
-    this.setActive2(this.activeIndex2 - 1);
+    this.setActive2(this.activeIndex - 1);
   }
 
   goNext2() {
-    this.setActive2(this.activeIndex2 + 1);
+    this.setActive2(this.activeIndex + 1);
   }
 
   prevIndex2(): number {
-    return (this.activeIndex2 - 1 + this.items2.length) % this.items2.length;
+    return (this.activeIndex - 1 + this.reservasDisponiveis.length) % this.reservasDisponiveis.length;
   }
 
   nextIndex2(): number {
-    return (this.activeIndex2 + 1) % this.items2.length;
+    return (this.activeIndex + 1) % this.reservasDisponiveis.length;
   }
 
   isAtiva(reserva: any): boolean {
-  const hoje = new Date();
-  const dataReserva = new Date(reserva.data.split('-').reverse().join('-') + 'T' + reserva.hora);
-  return dataReserva >= hoje;
-}
+    if (!reserva?.dataHora) return false;
+    const agora = new Date();
+    const dataReserva = new Date(reserva.dataHora);
+    return dataReserva >= agora;
+  }
+
+  extData(dataHora: string | Date): string {
+    return new Date(dataHora).toLocaleDateString('pt-BR');
+  }
+
+  extHora(dataHora: string | Date): string {
+    return new Date(dataHora).toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  }
+
 
 }
