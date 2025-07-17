@@ -10,11 +10,14 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./reservas.component.css']
 })
 export class ReservasComponent implements OnInit {
- quadraSelecionada: string = '';
+
+  quadraSelecionada: string = '';
   dataSelecionada: string = '';
-  horaSelecionada: string = '';
   convidados: number | null = null;
   dataMinima: string = '';
+
+  horaSelecionada: string = '';
+  horasDisponiveis: string[] =[]
 
   items2 = [
     { nome: 'Reserva 1', quadra: 'Futsal', data: '05-07-2025', hora: '18:00', convidados: 10 },
@@ -36,50 +39,6 @@ export class ReservasComponent implements OnInit {
     setInterval(() => {
       this.goNext2();
     }, 5000);
-  }
-
-  fazerReserva() {
-    if (
-      !this.quadraSelecionada ||
-      !this.dataSelecionada ||
-      !this.horaSelecionada ||
-      this.convidados === null || this.convidados <= 0
-    ) {
-      alert('Por favor, preencha todos os campos, incluindo a quantidade de convidados.');
-      return;
-    }
-
-    // Verifica se já existe uma reserva igual (quadra + data + hora)
-    const reservaExistente = this.items2.some(
-      reserva =>
-        reserva.quadra === this.quadraSelecionada &&
-        reserva.data === this.dataSelecionada &&
-        reserva.hora === this.horaSelecionada
-    );
-
-    if (reservaExistente) {
-      alert('Esta quadra já está reservada para essa data e horário. Por favor, escolha outro.');
-      return;
-    }
-
-    // Adiciona nova reserva com convidados
-    this.items2.push({
-      nome: `Reserva ${this.items2.length + 1}`,
-      quadra: this.quadraSelecionada,
-      data: this.dataSelecionada,
-      hora: this.horaSelecionada,
-      convidados: this.convidados,
-    });
-
-    alert(
-      `Reserva feita!\n\nQuadra: ${this.quadraSelecionada}\nData: ${this.dataSelecionada}\nHorário: ${this.horaSelecionada}\nConvidados: ${this.convidados}`
-    );
-
-    // Reseta os campos
-    this.quadraSelecionada = '';
-    this.dataSelecionada = '';
-    this.horaSelecionada = '';
-    this.convidados = null;
   }
 
   setActive2(index: number) {
@@ -108,14 +67,4 @@ export class ReservasComponent implements OnInit {
   return dataReserva >= hoje;
 }
 
-editarReserva(reserva: any) {
-  alert('Função de edição ainda não implementada.\nReserva: ' + reserva.nome);
-}
-
-excluirReserva(reserva: any) {
-  const confirmacao = confirm(`Deseja excluir a ${reserva.nome}?`);
-  if (confirmacao) {
-    this.items2 = this.items2.filter(r => r !== reserva);
-  }
-}
 }
