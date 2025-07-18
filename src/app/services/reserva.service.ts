@@ -48,7 +48,13 @@ export class ReservaService {
     return this.http.get<HistoricoReservaResponse>(`${this.apiUrl}${id}`);
   }
 
-  pageReservas(offset: number, limit: number){}
+  getHistoricoReservas(idTipoQuadra?: number, data?: string, hora?: string) {
+    const params: any = {};
+    if (idTipoQuadra != null) params.idTipoQuadra = idTipoQuadra;
+    if (data) params.data = data;
+    if (hora) params.hora = hora;
+    return this.http.get<HistoricoReservaResponse[]>(`${this.apiUrl}historico/associado`, { params });
+  }
 
   addConvidado(convidados: Partial<PerfilRequestModel>[], id: number){
     return this.http.post(`${this.apiUrl}${id}/convidados`, convidados)

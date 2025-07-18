@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TrocarSenhaService } from '../../../services/trocar-senha.service';
 import Swal from 'sweetalert2';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
@@ -11,7 +11,6 @@ import { TrocarSenhaRequestModel } from '../../../models/auth/trocar-senha.reque
   standalone: true,
   imports: [
     FormsModule,
-    RouterLink,
     SweetAlert2Module
   ],
   templateUrl: './redefinir-senha.component.html',

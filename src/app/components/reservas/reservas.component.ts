@@ -9,6 +9,7 @@ import {TipoQuadraModel} from '../../models/quadra/tipo.quadra.model';
 import {Router} from '@angular/router';
 import {PageResponseModel} from '../../models/page.response.model';
 import {HistoricoReservaResponse} from '../../models/reservas/historico.reserva.response';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-reservas',
@@ -20,9 +21,11 @@ import {HistoricoReservaResponse} from '../../models/reservas/historico.reserva.
 export class ReservasComponent implements OnInit {
 
   constructor(private service: ReservaService, private tipoService: TipoQuadraService,
-              private router: Router) {}
+              private router: Router, private authService: AuthService) {}
 
   pageHistoricoReservas: PageResponseModel<HistoricoReservaResponse> | null = null;
+
+  historicoReservas: HistoricoReservaResponse[] = [];
 
   reservasDisponiveis: ReservasDisponiveisResponse[] = [];
 
@@ -39,6 +42,8 @@ export class ReservasComponent implements OnInit {
 
   activeIndex = 0;
 
+  userRole: string | null = null;
+
   ngOnInit() {
     const hoje = new Date();
     const ano = hoje.getFullYear();
@@ -46,17 +51,45 @@ export class ReservasComponent implements OnInit {
     const dia = String(hoje.getDate()).padStart(2, '0');
     this.dataMinima = `${ano}-${mes}-${dia}`;
 
-    this.loadReservasDisponiveis()
-    this.loadPageHistorico()
-    this.loadTipos()
+    this.authService.getUserRole().subscribe({
+      next: role => this.userRole = role,
+      error: () => this.userRole = null
+    });
 
+    this.loadReservasDisponiveis()
+
+    if(this.isAdmin()){
+      this.loadPageHistorico()
+    }
+    if(this.isAssociado()){
+      console.log('Associado');
+      this.loadHistoricoReservas()
+    }
+
+    this.loadTipos()
   }
 
   loadPageHistorico(){
     this.service.pageHistoricoReservas(this.offset, this.limit, this.tipoQuadraSelecionada,this.dataSelecionada, this.horaSelecionada).subscribe({
       next: (data) => {
         this.pageHistoricoReservas = data;
-        console.log(this.pageHistoricoReservas);
+      },
+      error: err => {
+        void Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar Tipos de Quadras',
+          text: 'Não foi possível carregar a lista de tipos de quadras.',
+          footer: err?.message ? `<small>${err.message}</small>` : '',
+        });
+      }
+    })
+  }
+
+  loadHistoricoReservas(){
+    this.service.getHistoricoReservas(this.tipoQuadraSelecionada,this.dataSelecionada, this.horaSelecionada).subscribe({
+      next: (data) => {
+        this.historicoReservas = data;
+        console.log(this.historicoReservas);
       },
       error: err => {
         void Swal.fire({
@@ -187,5 +220,11 @@ export class ReservasComponent implements OnInit {
     });
   }
 
+  isAdmin(): boolean {
+    return this.userRole === 'ROLE_ADMINISTRADOR';
+  }
 
+  isAssociado(): boolean {
+    return this.userRole === 'ROLE_ASSOCIADO';
+  }
 }

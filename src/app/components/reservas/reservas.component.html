@@ -151,7 +151,7 @@
   <hr class="border-t border-gray-300 w-full" />
   <p class="ml-[150px] text-2xl ">Histórico de Reservas</p>
 
-  <table class="table-auto w-full border shadow-lg border-gray-200 mx-auto mt-10">
+  <table *ngIf="isAdmin()" class="table-auto w-full border shadow-lg border-gray-200 mx-auto mt-10">
     <thead class="bg-gray-100 text-gray-700">
       <tr>
         <th class="px-4 py-2 text-center">Quadra</th>
@@ -184,9 +184,48 @@
       </tr>
       <tr *ngIf="!pageHistoricoReservas?.content || (pageHistoricoReservas?.content?.length ?? 0) === 0">
         <td colspan="5" class="p-4 text-center text-gray-500 italic">
-          Nenhuma quadra cadastrada
+          Nenhuma reserva agendada
         </td>
       </tr>
+    </tbody>
+  </table>
+
+  <table *ngIf="isAssociado()" class="table-auto w-full border shadow-lg border-gray-200 mx-auto mt-10">
+    <thead class="bg-gray-100 text-gray-700">
+    <tr>
+      <th class="px-4 py-2 text-center">Quadra</th>
+      <th class="px-4 py-2 text-center">Data</th>
+      <th class="px-4 py-2 text-center">Horário</th>
+      <th class="px-4 py-2 text-center">Status</th>
+      <th class="px-2 py-2 text-center">Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let historico of historicoReservas" class="border-b">
+      <td class="px-4 py-2 text-center">{{ historico.quadra.nome }}</td>
+      <td class="px-4 py-2 text-center">{{ extData(historico.dataHora) }}</td>
+      <td class="px-4 py-2 text-center">{{ extHora(historico.dataHora) }}</td>
+      <td class="px-4 py-2 text-center">{{ historico.status }}</td>
+      <td class="px-2 py-2 text-center w-[300px]">
+        <button
+          class="bg-transparent text-blue-400 px-3 py-1 rounded hover:text-blue-600 transition"
+          (click)="editarReserva(historico.id)"
+        >
+          Acompanhar
+        </button>
+        <button
+          class="bg-transparent text-red-400 px-3 py-1 rounded hover:text-red-600 transition"
+          (click)="cancelarReserva(historico.id)"
+        >
+          Cancelar
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="!historicoReservas || historicoReservas.length === 0">
+      <td colspan="5" class="p-4 text-center text-gray-500 italic">
+        Nenhuma reserva agendada
+      </td>
+    </tr>
     </tbody>
   </table>
 
