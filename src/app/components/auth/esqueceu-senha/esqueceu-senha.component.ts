@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from "@angular/forms";
-import { RouterLink } from '@angular/router';
-// import { NgClass } from '@angular/common';
-import { UsuarioRequestModel } from '../../../models/gerenciar-usuarios/usuario.request.model';
-import { UsuarioService } from '../../../services/usuario.service';
+import { Router, RouterLink } from '@angular/router';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2';
+import { EsqueceuSenhaService } from '../../../services/esqueceu.service';
 
 @Component({
   selector: 'app-cadastro-login',
@@ -13,7 +11,6 @@ import Swal from 'sweetalert2';
   imports: [
     FormsModule,
     RouterLink,
-    // NgClass,
     SweetAlert2Module
   ],
   templateUrl: './esqueceu-senha.component.html',
@@ -21,38 +18,38 @@ import Swal from 'sweetalert2';
 })
 export class EsqueceuSenhaComponent {
 
-  // @ts-ignore
-  usuarioModel: UsuarioRequestModel = {
-    email: '',
+  usuarioModel = {
+    cpf: ''
   };
 
   constructor(
-    private usuarioService: UsuarioService,
-    // private router: Router
+    private esqueceuSenhaService: EsqueceuSenhaService,
+    private router: Router
   ) {}
 
   enviarEmailRedefinicaoSenha() {
-    if (!this.usuarioModel.email) {
-      void Swal.fire('Erro', 'Informe um e-mail válido.', 'error');
+    const cpf = this.usuarioModel.cpf?.trim();
+
+    if (!cpf || cpf.length < 11) {
+      void Swal.fire('Erro', 'Informe um CPF válido com 11 dígitos.', 'error');
       return;
     }
 
-    this.usuarioService.solicitarRedefinicaoSenha(this.usuarioModel.email).subscribe({
+    this.esqueceuSenhaService.solicitarRedefinicaoSenha(cpf).subscribe({
       next: () => {
         void Swal.fire({
-            title: 'Sucesso',
-            text: 'Instruções de redefinição de senha enviadas para o e-mail.',
-            icon: 'success',
-            showConfirmButton: true
-          }
-        );
+          title: 'Sucesso',
+          text: 'Instruções de redefinição de senha enviadas para o CPF informado.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+    this.router.navigate(['/redefinir-senha']);
+  });
       },
       error: (error) => {
         console.error(error);
-        void Swal.fire('Erro', 'Não foi possível enviar o e-mail. Verifique o e-mail informado.', 'error');
+        void Swal.fire('Erro', 'Não foi possível enviar a solicitação. Verifique o CPF informado.', 'error');
       }
     });
   }
-
-
 }

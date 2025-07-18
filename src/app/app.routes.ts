@@ -9,6 +9,7 @@ import {GerenciarUsuariosComponent} from './components/gerenciar-usuarios/gerenc
 import { VizualizarQuadrasComponent } from './components/vizualizar-quadras/vizualizar-quadras.component';
 import { ReservasComponent } from './components/reservas/reservas.component';
 import {PerfilComponent} from './components/perfil/perfil.component';
+import { RedefinirSenhaComponent } from './components/auth/redefinir-senha/redefinir-senha.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,7 @@ export const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'esqueceu-senha', component: EsqueceuSenhaComponent },
+      { path: 'redefinir-senha', component: RedefinirSenhaComponent },
     ]
   },
   { path: '**', redirectTo: 'login' }
