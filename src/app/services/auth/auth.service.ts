@@ -52,4 +52,17 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem('token');
   }
+
+  getUserRole(): Observable<string> {
+    const token = this.getToken();
+    if (!token) {
+      throw new Error('Token não encontrado');
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+
+    return this.http.get('http://localhost:8080/api/auth/role', { headers, responseType: 'text' });
+  }
 }

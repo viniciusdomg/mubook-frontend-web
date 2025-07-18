@@ -1,80 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth/auth.service';
+import { LayoutAdminComponent } from '../../layout-admin/layout-admin.component';
+import { LayoutSocioComponent } from '../../layout-socio/layout-socio.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
-  templateUrl: './home.component.html',
   standalone: true,
+  imports: [CommonModule, LayoutSocioComponent, LayoutAdminComponent],
+  template: `
+    <ng-container *ngIf="role === 'ROLE_ASSOCIADO'">
+      <app-layout-socio></app-layout-socio>
+    </ng-container>
+
+    <ng-container *ngIf="role === 'ROLE_ADMINISTRADOR'">
+      <app-layout-admin></app-layout-admin>
+    </ng-container>
+
+    <ng-container *ngIf="!role">
+      <p class="ml-[150px] text-gray-400">Carregando...</p>
+    </ng-container>
+  `
 })
-export class HomeComponent {
-   items = [1, 2, 3, 4, 5, 6];
-  activeIndex = 0;
+export class HomeComponent implements OnInit {
+  role: string | null = null;
 
-  items2 = [1, 2, 3, 4, 5, 6];
-  activeIndex2 = 3;
+  constructor(private authService: AuthService) {}
 
-  private interval1: any;
-  private interval2: any;
-
-  ngOnInit() {
-    // A cada 5 segundos avança o primeiro carrossel
-    this.interval1 = setInterval(() => {
-      this.goNext();
-    }, 5000);
-
-    // A cada 5 segundos avança o segundo carrossel
-    this.interval2 = setInterval(() => {
-      this.goNext2();
-    }, 5000);
+  ngOnInit(): void {
+    this.authService.getUserRole().subscribe({
+      next: (res) => this.role = res,
+      error: () => this.role = null
+    });
   }
-
-  ngOnDestroy() {
-    clearInterval(this.interval1);
-    clearInterval(this.interval2);
-  }
-
-  // Funções existentes
-  setActive(index: number) {
-    this.activeIndex = (index + this.items.length) % this.items.length;
-  }
-
-  goPrev() {
-    this.setActive(this.activeIndex - 1);
-  }
-
-  goNext() {
-    this.setActive(this.activeIndex + 1);
-  }
-
-  prevIndex(): number {
-    return (this.activeIndex - 1 + this.items.length) % this.items.length;
-  }
-
-  nextIndex(): number {
-    return (this.activeIndex + 1) % this.items.length;
-  }
-
-  // Segundo carrossel
-
-  setActive2(index: number) {
-    this.activeIndex2 = (index + this.items2.length) % this.items2.length;
-  }
-
-  goPrev2() {
-    this.setActive2(this.activeIndex2 - 1);
-  }
-
-  goNext2() {
-    this.setActive2(this.activeIndex2 + 1);
-  }
-
-  prevIndex2(): number {
-    return (this.activeIndex2 - 1 + this.items2.length) % this.items2.length;
-  }
-
-  nextIndex2(): number {
-    return (this.activeIndex2 + 1) % this.items2.length;
-  }
-
 }
