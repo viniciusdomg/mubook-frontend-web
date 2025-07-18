@@ -1,164 +1,194 @@
-<p class="ml-[150px] text-2xl ">Fazer Reservas</p>
+<div class="p-6 h-full">
+  <h2 class="text-2xl font-semibold">Reservas</h2>
+  <div class="ml-[80px] mt-[50px] max-w-[400px]">
+    <div class="flex items-center gap-4 mb-6">
+      <p class="text-lg text-gray-700 w-[120px] whitespace-nowrap">Tipo de quadra:</p>
+      <select
+        [(ngModel)]="tipoQuadraSelecionada"
+        class="border border-gray-300 rounded px-4 py-2 w-[280px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
+      >
+        <option [value]="0" selected disabled>Selecione...</option>
+        <option *ngFor="let tipo of tiposQuadra" [value]="tipo.id">
+          {{ tipo.nome }}
+        </option>
+        <option [value]="0">Todos</option>
+      </select>
+    </div>
 
-<div class="ml-[150px] mt-[80px] max-w-[400px]">
-  <div class="flex items-center gap-4 mb-6">
-    <p class="text-lg text-gray-700 w-[120px] whitespace-nowrap">Tipo de quadra:</p>
-    <select
-      [(ngModel)]="quadraSelecionada"
-      class="border border-gray-300 rounded px-4 py-2 w-[280px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
-    >
-      <option value="" disabled>Selecione o tipo de quadra</option>
-      <option value="futsal">Futsal</option>
-      <option value="volei">Vôlei</option>
-      <option value="basquete">Basquete</option>
-      <option value="tenis">Tênis</option>
-      <option value="areia">Areia</option>
-    </select>
-  </div>
+    <div class="flex items-center gap-4 mb-6">
+      <p class="text-lg text-gray-700 w-[120px]">Data:</p>
+      <input
+        type="date"
+        [(ngModel)]="dataSelecionada"
+        [min]="dataMinima"
+        class="border border-gray-300 rounded px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
+      />
+    </div>
 
-  <div class="flex items-center gap-4 mb-6">
-    <p class="text-lg text-gray-700 w-[120px]">Data:</p>
-    <input
-      type="date"
-      [(ngModel)]="dataSelecionada"
-      [min]="dataMinima"
-      class="border border-gray-300 rounded px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
-    />
-  </div>
+    <div class="flex items-center gap-4 mb-8">
+      <p class="text-lg text-gray-700 w-[120px]">Horário:</p>
+      <input
+        type="time"
+        step="3600"
+        [(ngModel)]="horaSelecionada"
+        class="border border-gray-300 rounded px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
+      />
+    </div>
 
-  <div class="flex items-center gap-4 mb-8">
-    <p class="text-lg text-gray-700 w-[120px]">Horário:</p>
-    <input
-      type="time"
-      [(ngModel)]="horaSelecionada"
-      class="border border-gray-300 rounded px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
-    />
-  </div>
-
-  <button
-    (click)="fazerReserva()"
-    class="bg-[#6D71FF] text-white px-6 py-2 rounded hover:bg-[#5a5ee0] transition"
-  >
-    Fazer Reserva
-  </button>
-</div>
-
-<div class="mt-20">
-  <div class="flex items-center justify-center gap-4 mt-16">
-
-    <!-- Botão voltar -->
     <button
-      (click)="goPrev2()"
-      class="p-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+      class="bg-[#6D71FF] text-white px-6 py-2 rounded hover:bg-[#5a5ee0] transition"
+      (click)="loadReservasDisponiveis()"
     >
-      ←
-    </button>
-
-    <!-- Anterior do anterior -->
-    <div
-      class="w-[140px] h-[85px] bg-white border border-gray-300 shadow flex flex-col items-center justify-center opacity-40 scale-75 cursor-pointer p-1 text-xs text-center text-green-600"
-      (click)="setActive2((prevIndex2() - 1 + items2.length) % items2.length)"
-    >
-      {{ items2[(prevIndex2() - 1 + items2.length) % items2.length].nome }}
-    </div>
-
-    <!-- Anterior -->
-    <div
-      class="w-[300px] h-[200px] bg-white border border-gray-300 shadow-md flex flex-col items-center justify-center cursor-pointer p-2 text-center text-green-600"
-      (click)="setActive2(prevIndex2())"
-    >
-      <h3 class="font-semibold">{{ items2[prevIndex2()].nome }}</h3>
-      <p>Quadra: {{ items2[prevIndex2()].quadra }}</p>
-      <p>Data: {{ items2[prevIndex2()].data }}</p>
-      <p>Hora: {{ items2[prevIndex2()].hora }}</p>
-      <p>Convidados: {{ items2[prevIndex2()].convidados }}</p>
-    </div>
-
-    <!-- Ativo -->
-    <div
-      class="w-[300px] h-[200px] bg-white border border-red-500 shadow-lg flex flex-col items-center justify-center p-2 text-center text-green-600"
-    >
-      <h3 class="font-bold text-lg">{{ items2[activeIndex2].nome }}</h3>
-      <p>Quadra: {{ items2[activeIndex2].quadra }}</p>
-      <p>Data: {{ items2[activeIndex2].data }}</p>
-      <p>Hora: {{ items2[activeIndex2].hora }}</p>
-      <p>Convidados: {{ items2[prevIndex2()].convidados }}</p>
-    </div>
-
-    <!-- Próximo -->
-    <div
-      class="w-[300px] h-[200px] bg-white border border-gray-300 shadow-md flex flex-col items-center justify-center cursor-pointer p-2 text-center text-green-600"
-      (click)="setActive2(nextIndex2())"
-    >
-      <h3 class="font-semibold">{{ items2[nextIndex2()].nome }}</h3>
-      <p>Quadra: {{ items2[nextIndex2()].quadra }}</p>
-      <p>Data: {{ items2[nextIndex2()].data }}</p>
-      <p>Hora: {{ items2[nextIndex2()].hora }}</p>
-      <p>Convidados: {{ items2[prevIndex2()].convidados }}</p>
-    </div>
-
-    <!-- Próximo do próximo -->
-    <div
-      class="w-[140px] h-[85px] bg-white border border-gray-300 shadow flex flex-col items-center justify-center opacity-40 scale-75 cursor-pointer p-1 text-xs text-center text-green-600"
-      (click)="setActive2((nextIndex2() + 1) % items2.length)"
-    >
-      {{ items2[(nextIndex2() + 1) % items2.length].nome }}
-    </div>
-
-    <!-- Botão avançar -->
-    <button
-      (click)="goNext2()"
-      class="p-2 bg-gray-200 rounded hover:bg-gray-300 transition"
-    >
-      →
+      Buscar
     </button>
   </div>
+
+
+
+  <div class="mt-20" *ngIf="reservasDisponiveis && reservasDisponiveis.length > 0; else   noReservas">
+    <div class="flex items-center justify-center gap-4 mt-16">
+
+      <!-- Botão voltar -->
+      <button
+        (click)="goPrev2()"
+        class="p-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+      >
+        ←
+      </button>
+
+      <!-- Anterior do anterior -->
+      <div
+        class="w-[140px] h-[85px] bg-white border border-gray-300 shadow flex flex-col items-center justify-center opacity-40 scale-75 cursor-pointer p-1 text-xs text-center text-green-600"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length])
+        }"
+        (click)="setActive2((prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length)"
+      >
+        {{ reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length].quadra.nome }}
+        {{extData(reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length].dataHora) }}
+        {{extHora(reservasDisponiveis[(prevIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length].dataHora) }}
+      </div>
+
+      <!-- Anterior -->
+      <div
+        class="w-[200px] h-[120px] bg-white border border-gray-300 shadow-md flex flex-col items-center justify-center opacity-55 scale-100 cursor-pointer p-2 text-center text-green-600"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[prevIndex2()]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[prevIndex2()])
+        }"
+        (click)="setActive2(prevIndex2())"
+      >
+        <p class="mb-0 py-1">Quadra: {{ reservasDisponiveis[prevIndex2()].quadra.nome }}</p>
+        <p class="mb-0 py-1">Data: {{ extData(reservasDisponiveis[prevIndex2()].dataHora)}}</p>
+        <p class="mb-0 py-1">Hora: {{ extHora(reservasDisponiveis[prevIndex2()].dataHora) }}</p>
+      </div>
+
+      <!-- Ativo -->
+      <div
+        class="w-[260px] h-[190px] bg-white border border-red-500 shadow-lg flex flex-col items-center justify-center p-2 text-center text-green-600"
+        [ngClass]="{
+          'border-red-500 text-green-600 cursor-pointer active:scale-95 hover:shadow-xl': isAtiva(reservasDisponiveis[activeIndex]),
+          'border-gray-400 text-gray-400 pointer-events-none opacity-70': !isAtiva(reservasDisponiveis[activeIndex])
+        }"
+        (click)="isAtiva(reservasDisponiveis[activeIndex]) && agendarReserva()"
+      >
+        <h3 class="mb-2 font-bold text-lg">Quadra: {{ reservasDisponiveis[activeIndex].quadra.nome }}</h3>
+        <p>Data: {{ extData(reservasDisponiveis[activeIndex].dataHora)}}</p>
+        <p>Hora: {{ extHora(reservasDisponiveis[activeIndex].dataHora)}}</p>
+        <p>até {{ reservasDisponiveis[prevIndex2()].quadra.quantidadeMaxima - 1 }} convidados</p>
+      </div>
+
+      <!-- Próximo -->
+      <div
+        class="w-[200px] h-[120px] bg-white border border-gray-300 shadow-md flex flex-col items-center justify-center opacity-55 scale-100 cursor-pointer p-2 text-center text-green-600"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[nextIndex2()]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[nextIndex2()])
+        }"
+        (click)="setActive2(nextIndex2())"
+      >
+        <p class="mb-0 py-1">Quadra: {{ reservasDisponiveis[nextIndex2()].quadra.nome }}</p>
+        <p class="mb-0 py-1">Data: {{ extData(reservasDisponiveis[nextIndex2()].dataHora)}}</p>
+        <p class="mb-0 py-1">Hora: {{ extHora(reservasDisponiveis[nextIndex2()].dataHora)}}</p>
+  <!--      <p>Convidados: {{ reservasDisponiveis[prevIndex2()].convidados }}</p>-->
+      </div>
+
+      <!-- Próximo do próximo -->
+      <div
+        class="w-[140px] h-[85px] bg-white border border-gray-300 shadow flex flex-col items-center justify-center opacity-40 scale-75 cursor-pointer p-1 text-xs text-center text-green-600"
+        [ngClass]="{
+          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[(nextIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length]),
+          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[(nextIndex2() - 1 + reservasDisponiveis.length) % reservasDisponiveis.length])
+        }"
+        (click)="setActive2((nextIndex2() + 1) % reservasDisponiveis.length)"
+      >
+        {{ reservasDisponiveis[(nextIndex2() + 1) % reservasDisponiveis.length].quadra.nome }}
+        {{ extData(reservasDisponiveis[(nextIndex2() + 1) % reservasDisponiveis.length].dataHora) }}
+        {{ extHora(reservasDisponiveis[(nextIndex2() + 1) % reservasDisponiveis.length].dataHora) }}
+      </div>
+
+      <!-- Botão avançar -->
+      <button
+        (click)="goNext2()"
+        class="p-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+      >
+        →
+      </button>
+    </div>
+  </div>
+
+  <ng-template #noReservas>
+    <div
+      class="w-full h-[270px] bg-transparent flex items-center justify-center text-gray-500"
+    >
+      Nenhuma reserva disponível
+    </div>
+  </ng-template>
+
+
+
+  <hr class="border-t border-gray-300 w-full" />
+  <p class="ml-[150px] text-2xl ">Histórico de Reservas</p>
+
+  <table class="table-auto w-full border shadow-lg border-gray-200 mx-auto mt-10">
+    <thead class="bg-gray-100 text-gray-700">
+      <tr>
+        <th class="px-4 py-2 text-center">Quadra</th>
+        <th class="px-4 py-2 text-center">Data</th>
+        <th class="px-4 py-2 text-center">Horário</th>
+        <th class="px-4 py-2 text-center">Status</th>
+        <th class="px-2 py-2 text-center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let historico of pageHistoricoReservas?.content" class="border-b">
+        <td class="px-4 py-2 text-center">{{ historico.quadra.nome }}</td>
+        <td class="px-4 py-2 text-center">{{ extData(historico.dataHora) }}</td>
+        <td class="px-4 py-2 text-center">{{ extHora(historico.dataHora) }}</td>
+        <td class="px-4 py-2 text-center">{{ historico.status }}</td>
+        <td class="px-2 py-2 text-center w-[300px]">
+          <button
+            class="bg-transparent text-blue-400 px-3 py-1 rounded hover:text-blue-600 transition"
+            (click)="editarReserva(historico.id)"
+          >
+            Acompanhar
+          </button>
+          <button
+            class="bg-transparent text-red-400 px-3 py-1 rounded hover:text-red-600 transition"
+            (click)="cancelarReserva(historico.id)"
+          >
+            Cancelar
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="!pageHistoricoReservas?.content || (pageHistoricoReservas?.content?.length ?? 0) === 0">
+        <td colspan="5" class="p-4 text-center text-gray-500 italic">
+          Nenhuma quadra cadastrada
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="h-[30px]"></div>
 </div>
-
-<hr class="border-t border-gray-300 w-full" />
-<p class="ml-[150px] text-2xl ">Histórico de Reservas</p>
-
-<table class="table-auto w-full border border-gray-300 text-sm text-center mt-10">
-  <thead class="bg-gray-100 text-gray-700">
-    <tr>
-      <th class="px-4 py-2 border">Quadra</th>
-      <th class="px-4 py-2 border">Data</th>
-      <th class="px-4 py-2 border">Horário</th>
-      <th class="px-4 py-2 border">Status</th>
-      <th class="px-4 py-2 border">Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let reserva of items2">
-      <td class="px-4 py-2 border">{{ reserva.quadra }}</td>
-      <td class="px-4 py-2 border">{{ reserva.data }}</td>
-      <td class="px-4 py-2 border">{{ reserva.hora }}</td>
-      <td class="px-4 py-2 border">
-        <span
-          class="px-2 py-1 rounded text-white"
-          [ngClass]="{
-            'bg-green-500': isAtiva(reserva),
-            'bg-gray-400': !isAtiva(reserva)
-          }"
-        >
-          {{ isAtiva(reserva) ? 'Ativa' : 'Expirada' }}
-        </span>
-      </td>
-      <td class="px-4 py-2 border">
-        <button
-          class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mr-2"
-          (click)="editarReserva(reserva)"
-        >
-          Editar
-        </button>
-        <button
-          class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-          (click)="excluirReserva(reserva)"
-        >
-          Excluir
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-

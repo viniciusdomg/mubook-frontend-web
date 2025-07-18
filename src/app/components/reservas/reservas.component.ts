@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {ReservasDisponiveisResponse} from '../../models/reservas/reservas.disponiveis.response';
+import {ReservaService} from '../../services/reserva.service';
+import {TipoQuadraService} from '../../services/tipo.quadra.service';
+import Swal from 'sweetalert2';
+import {TipoQuadraModel} from '../../models/quadra/tipo.quadra.model';
+import {Router} from '@angular/router';
+import {PageResponseModel} from '../../models/page.response.model';
+import {HistoricoReservaResponse} from '../../models/reservas/historico.reserva.response';
 
 @Component({
   selector: 'app-reservas',
@@ -10,21 +18,26 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./reservas.component.css']
 })
 export class ReservasComponent implements OnInit {
- quadraSelecionada: string = '';
+
+  constructor(private service: ReservaService, private tipoService: TipoQuadraService,
+              private router: Router) {}
+
+  pageHistoricoReservas: PageResponseModel<HistoricoReservaResponse> | null = null;
+
+  reservasDisponiveis: ReservasDisponiveisResponse[] = [];
+
+  tiposQuadra: TipoQuadraModel[] = [];
+
+  offset: number = 0;
+  limit: number = 20;
+  tipoQuadraSelecionada: number = 0;
   dataSelecionada: string = '';
-  horaSelecionada: string = '';
-  convidados: number | null = null;
   dataMinima: string = '';
 
-  items2 = [
-    { nome: 'Reserva 1', quadra: 'Futsal', data: '05-07-2025', hora: '18:00', convidados: 10 },
-    { nome: 'Reserva 2', quadra: 'Vôlei', data: '06-07-2025', hora: '20:00', convidados: 8 },
-    { nome: 'Reserva 3', quadra: 'Basquete', data: '07-07-2025', hora: '19:00', convidados: 12 },
-    { nome: 'Reserva 4', quadra: 'Tênis', data: '08-07-2025', hora: '16:00', convidados: 4 },
-    { nome: 'Reserva 5', quadra: 'Areia', data: '09-07-2025', hora: '17:00', convidados: 6 }
-  ];
+  horaSelecionada: string = '';
+  // horasDisponiveis: string[] =[]
 
-  activeIndex2 = 0;
+  activeIndex = 0;
 
   ngOnInit() {
     const hoje = new Date();
@@ -33,89 +46,146 @@ export class ReservasComponent implements OnInit {
     const dia = String(hoje.getDate()).padStart(2, '0');
     this.dataMinima = `${ano}-${mes}-${dia}`;
 
-    setInterval(() => {
-      this.goNext2();
-    }, 5000);
+    this.loadReservasDisponiveis()
+    this.loadPageHistorico()
+    this.loadTipos()
+
   }
 
-  fazerReserva() {
-    if (
-      !this.quadraSelecionada ||
-      !this.dataSelecionada ||
-      !this.horaSelecionada ||
-      this.convidados === null || this.convidados <= 0
-    ) {
-      alert('Por favor, preencha todos os campos, incluindo a quantidade de convidados.');
-      return;
-    }
+  loadPageHistorico(){
+    this.service.pageHistoricoReservas(this.offset, this.limit, this.tipoQuadraSelecionada,this.dataSelecionada, this.horaSelecionada).subscribe({
+      next: (data) => {
+        this.pageHistoricoReservas = data;
+        console.log(this.pageHistoricoReservas);
+      },
+      error: err => {
+        void Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar Tipos de Quadras',
+          text: 'Não foi possível carregar a lista de tipos de quadras.',
+          footer: err?.message ? `<small>${err.message}</small>` : '',
+        });
+      }
+    })
+  }
 
-    // Verifica se já existe uma reserva igual (quadra + data + hora)
-    const reservaExistente = this.items2.some(
-      reserva =>
-        reserva.quadra === this.quadraSelecionada &&
-        reserva.data === this.dataSelecionada &&
-        reserva.hora === this.horaSelecionada
-    );
+  loadReservasDisponiveis() {
+    this.service.getReservasDisponiveis(this.tipoQuadraSelecionada,this.dataSelecionada, this.horaSelecionada)
+      .subscribe({
+        next: (data) => {
+          this.reservasDisponiveis = data;
+        },
+        error: err => {
+          void Swal.fire({
+            icon: 'error',
+            title: 'Erro ao carregar Tipos de Quadras',
+            text: 'Não foi possível carregar a lista de tipos de quadras.',
+            footer: err?.message ? `<small>${err.message}</small>` : '',
+          });
+        }
+      })
+  }
 
-    if (reservaExistente) {
-      alert('Esta quadra já está reservada para essa data e horário. Por favor, escolha outro.');
-      return;
-    }
-
-    // Adiciona nova reserva com convidados
-    this.items2.push({
-      nome: `Reserva ${this.items2.length + 1}`,
-      quadra: this.quadraSelecionada,
-      data: this.dataSelecionada,
-      hora: this.horaSelecionada,
-      convidados: this.convidados,
+  loadTipos(): void {
+    this.tipoService.loadTipos().subscribe({
+      next: (data) => (this.tiposQuadra = data),
+      error: (err) => {
+        void Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar Tipos de Quadras',
+          text: 'Não foi possível carregar a lista de tipos de quadras.',
+          footer: err?.message ? `<small>${err.message}</small>` : '',
+        });
+      },
     });
+  }
 
-    alert(
-      `Reserva feita!\n\nQuadra: ${this.quadraSelecionada}\nData: ${this.dataSelecionada}\nHorário: ${this.horaSelecionada}\nConvidados: ${this.convidados}`
-    );
+  cancelarReserva(id: number){
+    void Swal.fire({
+      title: 'Tem certeza?',
+      text: 'Deseja mesmo cancelar essa reserva? Esta ação não pode ser desfeita.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sim, cancelar',
+      cancelButtonText: 'Desistir'
+    }).then(result => {
+      if(result.isConfirmed) {
+        this.service.cancelarReserva(id).subscribe({
+          next: data => {
+            void Swal.fire({
+              icon: 'success',
+              title: 'Sucesso',
+              text: 'Reserva cancelada com sucesso!',
+              timer: 2000,
+              timerProgressBar: true,
+            });
+            this.loadPageHistorico();
+            this.loadReservasDisponiveis();
+          }, error: err => {
+            void Swal.fire({
+              icon: 'error',
+              title: 'Erro ao cancelar reserva',
+              text: 'Não foi possível cancelar o reserva.',
+              footer: err?.message ? `<small>${err.message}</small>` : ''
+            });
+          }
+        })
+      }
+    });
+  }
 
-    // Reseta os campos
-    this.quadraSelecionada = '';
-    this.dataSelecionada = '';
-    this.horaSelecionada = '';
-    this.convidados = null;
+  agendarReserva(){
+    const reserva = this.reservasDisponiveis[this.activeIndex];
+    localStorage.setItem('reservaSelecionada', JSON.stringify(reserva));
+    void this.router.navigate(['/agendar-reserva']);
+  }
+
+  editarReserva(id: number) {
+    localStorage.setItem('modoEdicao', 'true');
+    localStorage.setItem('reservaId', id.toString());
+    void this.router.navigate(['/agendar-reserva']);
   }
 
   setActive2(index: number) {
-    this.activeIndex2 = (index + this.items2.length) % this.items2.length;
+    this.activeIndex = (index + this.reservasDisponiveis.length) % this.reservasDisponiveis.length;
   }
 
   goPrev2() {
-    this.setActive2(this.activeIndex2 - 1);
+    this.setActive2(this.activeIndex - 1);
   }
 
   goNext2() {
-    this.setActive2(this.activeIndex2 + 1);
+    this.setActive2(this.activeIndex + 1);
   }
 
   prevIndex2(): number {
-    return (this.activeIndex2 - 1 + this.items2.length) % this.items2.length;
+    return (this.activeIndex - 1 + this.reservasDisponiveis.length) % this.reservasDisponiveis.length;
   }
 
   nextIndex2(): number {
-    return (this.activeIndex2 + 1) % this.items2.length;
+    return (this.activeIndex + 1) % this.reservasDisponiveis.length;
   }
 
   isAtiva(reserva: any): boolean {
-  const hoje = new Date();
-  const dataReserva = new Date(reserva.data.split('-').reverse().join('-') + 'T' + reserva.hora);
-  return dataReserva >= hoje;
-}
-
-editarReserva(reserva: any) {
-  alert('Função de edição ainda não implementada.\nReserva: ' + reserva.nome);
-}
-
-excluirReserva(reserva: any) {
-  const confirmacao = confirm(`Deseja excluir a ${reserva.nome}?`);
-  if (confirmacao) {
-    this.items2 = this.items2.filter(r => r !== reserva);
+    if (!reserva?.dataHora) return false;
+    const agora = new Date();
+    const dataReserva = new Date(reserva.dataHora);
+    return dataReserva >= agora;
   }
-}
+
+  extData(dataHora: string | Date): string {
+    return new Date(dataHora).toLocaleDateString('pt-BR');
+  }
+
+  extHora(dataHora: string | Date): string {
+    return new Date(dataHora).toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  }
+
+
 }

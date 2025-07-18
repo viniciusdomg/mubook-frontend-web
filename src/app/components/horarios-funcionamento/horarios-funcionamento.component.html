@@ -1,0 +1,119 @@
+<div class="p-6 h-full">
+  <h2 class="text-2xl mb-[40px] font-semibold">Horarios de funcionamento</h2>
+  <form (ngSubmit)="onSubmit()" class="space-y-6">
+
+    <!-- Dias da Semana -->
+    <label class="block font-semibold mb-2">Dias da Semana<span class="text-red-800">*</span></label>
+    <div class="flex flex-wrap gap-3 mb-4">
+      <label
+        *ngFor="let dia of diasSemana"
+        class="cursor-pointer select-none flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300
+           transition-colors duration-200
+           relative
+           hover:bg-purple-700
+           hover:text-white
+           "
+        [class.bg-purple-700]="diasSelecionados.includes(dia.valor)"
+        [class.text-white]="diasSelecionados.includes(dia.valor)"
+        [class.border-purple-700]="diasSelecionados.includes(dia.valor)"
+      >
+        <input
+          type="checkbox"
+          [value]="dia.valor"
+          (change)="onDiaChange($event)"
+          [checked]="diasSelecionados.includes(dia.valor)"
+          name="diaSemana"
+          class="appearance-none w-0 h-0 opacity-0 absolute"
+        />
+        <span>{{ dia.label }}</span>
+        <i
+          *ngIf="diasSelecionados.includes(dia.valor)"
+          class="bi bi-check-lg text-white"
+        ></i>
+      </label>
+    </div>
+
+    <!-- Tipo de Quadra -->
+    <label class="block font-semibold mb-2">Tipo de Quadra<span class="text-red-800">*</span></label>
+    <select [(ngModel)]="horario.tipoQuadraId" name="tipoQuadra" class="border p-2 rounded w-full mb-4">
+      <option [ngValue]="null">Selecione...</option>
+      <option *ngFor="let tipo of tiposQuadra" [value]="tipo.id">
+        {{ tipo.nome }}
+      </option>
+    </select>
+
+    <!-- Horários -->
+    <div class="flex gap-4">
+      <div class="flex flex-col">
+        <label class="mb-1">Abertura<span class="text-red-800">*</span></label>
+        <input type="time" [(ngModel)]="horario.abertura" name="abertura" class="border p-2 rounded" />
+      </div>
+      <div class="flex flex-col">
+        <label class="mb-1">Fechamento<span class="text-red-800">*</span></label>
+        <input type="time" [(ngModel)]="horario.fechamento" name="fechamento" class="border p-2 rounded" />
+      </div>
+    </div>
+
+    <button type="submit" class="mt-6 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+      Cadastrar Horário
+    </button>
+  </form>
+
+  <hr class="border-t border-gray-300 w-full" />
+
+  <table class="w-full table-fixed border shadow-lg border-gray-200">
+    <thead class="bg-gray-100">
+    <tr>
+      <th class="p-2 text-center">Tipo de Quadra</th>
+      <th class="p-2 text-center"> Dias da semana</th>
+      <th class="p-2 text-center">Horário Abertura</th>
+      <th class="p-2 text-center">Horário Fechamento</th>
+      <th class="p-2 text-center">Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let horario of horariosPage?.content" class="border-b">
+      <td class="p-2 text-center">{{ horario.tipoQuadra.nome }}</td>
+      <td class="p-2 text-center">{{ getDiasFormatados(horario.diaSemana)}}</td>
+      <td class="p-2 text-center">{{ horario.horarioAbertura }}</td>
+      <td class="p-2 text-center">{{ horario.horarioFechamento }}</td>
+      <td class="p-2 flex gap-2 justify-center">
+        <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(horario.id)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="!horariosPage?.content || (horariosPage?.content?.length ?? 0) === 0">
+      <td colspan="6" class="p-4 text-center text-gray-500 italic">
+        Nenhum horário cadastrado
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="flex justify-between mt-4 ">
+    <button
+      (click)="prevPage()"
+      class="px-3 py-1 border rounded"
+      [disabled]="!horariosPage || horariosPage.first"
+      [ngClass]="{
+      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !horariosPage || horariosPage.first,
+      'hover:bg-gray-100': horariosPage && !horariosPage.first
+    }">
+      Anterior
+    </button>
+
+    <button
+      (click)="nextPage()"
+      class="px-3 py-1 border rounded"
+      [disabled]="!horariosPage || horariosPage.last"
+      [ngClass]="{
+      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !horariosPage || horariosPage.last,
+      'hover:bg-gray-100': horariosPage && !horariosPage.last
+    }">
+      Próximo
+    </button>
+  </div>
+
+  <div class="h-[10px]"></div>
+</div>
