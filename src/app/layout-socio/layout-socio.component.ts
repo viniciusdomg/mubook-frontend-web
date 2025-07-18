@@ -1,97 +1,68 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReservaService } from '../services/reserva.service';
 
 interface Reserva {
   id?: number;
-  nome: string;
   quadra: string;
-  data: string;
-  horario: string;
-  repetirSemanalmente: boolean;
+  data: string; // formato: 'dd/MM'
+  horario: string; // exemplo: '18h - 19h'
+  convidados: number;
 }
 
 @Component({
   selector: 'app-layout-socio',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './layout-socio.component.html',
+  styleUrls: ['./layout-socio.component.css'],
 })
 export class LayoutSocioComponent implements OnInit {
   reservas: Reserva[] = [];
-  novaReserva: Reserva = {
-    nome: '',
-    quadra: '',
-    data: '',
-    horario: '',
-    repetirSemanalmente: false,
-  };
-  private proximoId = 1;
+  totalReservasMes: number = 0;
 
-  ngOnInit(): void {
+  constructor(private reservaService: ReservaService) {}
+
+   ngOnInit(): void {
     this.listarReservas();
+    this.buscarTotalReservasMes();
   }
 
   listarReservas(): void {
-  this.reservas = [
-    {
-      id: 1,
-      nome: 'João',
-      quadra: 'Quadra 1',
-      data: '2025-07-20',
-      horario: '10:00',
-      repetirSemanalmente: false,
-    },
-    {
-      id: 2,
-      nome: 'Maria',
-      quadra: 'Quadra 2',
-      data: '2025-07-21',
-      horario: '14:00',
-      repetirSemanalmente: true,
-    },
-    {
-      id: 3,
-      nome: 'Carlos',
-      quadra: 'Quadra 1',
-      data: '2025-07-22',
-      horario: '09:00',
-      repetirSemanalmente: false,
-    },
-    {
-      id: 4,
-      nome: 'Fernanda',
-      quadra: 'Quadra 3',
-      data: '2025-07-23',
-      horario: '18:30',
-      repetirSemanalmente: true,
-    },
-    {
-      id: 5,
-      nome: 'Lucas',
-      quadra: 'Quadra 2',
-      data: '2025-07-24',
-      horario: '16:00',
-      repetirSemanalmente: false,
-    },
-  ];
-  this.proximoId = this.reservas.length + 1;
-}
-
-
-  salvarReserva(): void {
-    const nova = { ...this.novaReserva, id: this.proximoId++ };
-    this.reservas.push(nova);
-    this.novaReserva = {
-      nome: '',
-      quadra: '',
-      data: '',
-      horario: '',
-      repetirSemanalmente: false,
-    };
+    this.reservas = [
+      {
+        id: 1,
+        quadra: 'Quadra de Tênis',
+        data: '05/04',
+        horario: '18h - 19h',
+        convidados: 1,
+      },
+      {
+        id: 2,
+        quadra: 'Quadra de Tênis',
+        data: '06/04',
+        horario: '18h - 19h',
+        convidados: 3,
+      },
+    ];
   }
 
-  excluirReserva(id: number): void {
-    this.reservas = this.reservas.filter((reserva) => reserva.id !== id);
+   buscarTotalReservasMes(): void {
+    this.reservaService.getTotalReservasMes().subscribe({
+      next: (total: number) => this.totalReservasMes = total,
+      error: () => this.totalReservasMes = 0
+    });
+  }
+
+  cancelarReserva(id: number): void {
+    this.reservas = this.reservas.filter(r => r.id !== id);
+  }
+
+  irAnterior(): void {
+    // lógica futura
+  }
+
+  irProximo(): void {
+    // lógica futura
   }
 }
