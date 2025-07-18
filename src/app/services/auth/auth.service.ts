@@ -33,6 +33,7 @@ export class AuthService {
 
   getUsuario(): UsuarioRequestModel | null {
     const data = localStorage.getItem('usuario');
+    console.log('Dados do usuário:', data);
     return data ? JSON.parse(data) : null;
   }
 

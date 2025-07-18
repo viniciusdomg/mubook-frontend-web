@@ -1,38 +1,61 @@
-<div class="navbar fixed top-0 left-[242px] w-[calc(100%-16rem)] flex justify-end items-center bg-white border-b border-[#C4BEBE] p-3 z-50 ">
+<div
+  class="navbar fixed top-0 left-[242px] w-[calc(100%-16rem)] flex justify-end items-center bg-white border-b border-[#C4BEBE] p-3 z-50"
+>
   <div class="ml-auto flex items-center gap-3">
     <!-- Notificação -->
-    <div class="bg-[#ececfe] p-2 rounded-lg hover:bg-[#dcdcff] transition-colors duration-300 cursor-pointer flex">
-      <i class="bi bi-bell text-[#8a8de6] hover:text-[#5f61c4] transition-all duration-300 transform hover:scale-110"></i>
+    <div
+      class="bg-[#ececfe] p-2 rounded-lg hover:bg-[#dcdcff] transition-colors duration-300 cursor-pointer flex"
+    >
+      <i
+        class="bi bi-bell text-[#8a8de6] hover:text-[#5f61c4] transition-all duration-300 transform hover:scale-110"
+      ></i>
     </div>
 
     <div class="navbar fixed top-0 gap-2.5">
-
       <!-- Upload -->
-      <label for="fileInput"
-             class="w-10 h-10 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:text-black transition duration-200">
+      <label
+        for="fileInput"
+        class="w-10 h-10 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:text-black transition duration-200"
+      >
         <input type="file" id="fileInput" accept="image/*" class="hidden" />
-        <i class="bi bi-camera text-xl text-gray-500 m-0 p-0 leading-none relative top-[5px] left-[8px]"></i>
+        <i
+          class="bi bi-camera text-xl text-gray-500 m-0 p-0 leading-none relative top-[5px] left-[8px]"
+        ></i>
       </label>
 
       <!-- Info -->
-      <div class="font-[Inter] flex flex-col">
-        <p class="mb-1 text-sm font-semibold">Nome</p>
-        <p class="mb-1 text-xs text-[#b7b7b9]">Admin</p>
+      <div class="font-[Inter] flex flex-col text-right">
+        <p class="mb-1 text-sm font-semibold">{{ nome }}</p>
+        <p class="mb-1 text-xs text-[#b7b7b9]">{{ role }}</p>
       </div>
 
       <!-- Dropdown Toggle -->
       <div class="relative">
-        <button (click)="toggleDropdown($event)"
-                [@rotateIcon]="dropdownAtivo ? 'open' : 'closed'"
-                class="focus:outline-none transition-transform duration-300">
+        <button
+          (click)="toggleDropdown($event)"
+          [@rotateIcon]="dropdownAtivo ? 'open' : 'closed'"
+          class="focus:outline-none transition-transform duration-300"
+        >
           <i class="bi bi-caret-up-fill text-gray-700 text-lg"></i>
         </button>
 
-        <div *ngIf="dropdownAtivo"
-             [@fadeSlide]
-             class="absolute top-full right-0 mt-2 bg-white shadow-lg rounded-md py-2 w-[150px] font-[Inter] z-50 transition-all duration-300">
-          <a href="#" class="block text-decoration-none px-4 py-2 text-sm text-gray-800 hover:bg-[#ececfe] hover:text-[#5f61c4] transition-all duration-200">Perfil</a>
-          <a href="#" (click)="logout()" class="block text-decoration-none px-4 py-2 text-sm text-gray-800 hover:bg-[#ececfe] hover:text-[#5f61c4] transition-all duration-200">Sair</a>
+        <div
+          *ngIf="dropdownAtivo"
+          [@fadeSlide]
+          class="absolute top-full right-0 mt-2 bg-white shadow-lg rounded-md py-2 w-[150px] font-[Inter] z-50 transition-all duration-300"
+        >
+          <a
+            href="#"
+            (click)="irParaPerfil($event)"
+            class="block text-decoration-none px-4 py-2 text-sm text-gray-800 hover:bg-[#ececfe] hover:text-[#5f61c4] transition-all duration-200"
+            >Perfil</a
+          >
+          <a
+            href="#"
+            (click)="logout()"
+            class="block text-decoration-none px-4 py-2 text-sm text-gray-800 hover:bg-[#ececfe] hover:text-[#5f61c4] transition-all duration-200"
+            >Sair</a
+          >
         </div>
       </div>
     </div>

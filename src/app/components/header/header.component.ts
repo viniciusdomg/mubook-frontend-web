@@ -1,20 +1,17 @@
-import { Component, HostListener } from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthService} from '../../services/auth/auth.service';
-import {NgIf} from '@angular/common';
-
+import { Component, HostListener, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
+import { PerfilService } from '../../services/perfil.service';
+import { NgIf } from '@angular/common';
+import { PerfilRequestModel } from '../../models/perfil/perfil.request.model';
 import {
   trigger, state, style, transition, animate
 } from '@angular/animations';
-// import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [
-    // NgClass,
-    NgIf,
-    // RouterLink
-  ],
+  standalone: true,
+  imports: [NgIf],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   animations: [
@@ -36,20 +33,43 @@ import {
     ])
   ]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   dropdownAtivo = false;
+  nome: string = 'Usuário';
+  role: string = 'Função';
 
-  constructor(private apiService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private perfilService: PerfilService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    // Buscar nome do usuário
+    this.perfilService.getDados().subscribe({
+      next: (dados: PerfilRequestModel) => {
+        this.nome = dados.nome;
+      },
+      error: () => {
+        this.nome = 'Usuário';
+      }
+    });
+
+    // Buscar role do usuário
+    this.authService.getUserRole().subscribe({
+      next: (role: string) => {
+        this.role = role.replace('ROLE_', '');
+      },
+      error: () => {
+        this.role = 'Função';
+      }
+    });
+  }
 
   toggleDropdown(event: Event): void {
     event.preventDefault();
     this.dropdownAtivo = !this.dropdownAtivo;
   }
-
-  // @HostListener('document:click', ['$event'])
-  // onDocumentClick(event: MouseEvent) {
-  //   this.dropdownAtivo = false;
-  // }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -57,7 +77,12 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.apiService.logout()
-    void this.router.navigate(['/login']);
+    this.authService.logout();
+  }
+
+  irParaPerfil(event: Event) {
+    event.preventDefault(); // impede o comportamento padrão do link
+    this.dropdownAtivo = false; // fecha o dropdown
+    void this.router.navigate(['/perfil']);
   }
 }
