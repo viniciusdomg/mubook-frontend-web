@@ -18,8 +18,10 @@
         <option value="0">Todas</option>
       </select>
 
-      <label class="text-lg text-gray-700 m-0">Buscar por ID:</label>
-      <div class="relative w-40">
+      <label class="text-lg text-gray-700 m-0" *ngIf="isAdmin()"
+        >Buscar por ID:</label
+      >
+      <div class="relative w-40" *ngIf="isAdmin()">
         <!-- Prefixo visual -->
         <span
           class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
