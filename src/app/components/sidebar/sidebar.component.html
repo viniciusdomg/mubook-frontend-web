@@ -3,23 +3,26 @@
     <h2 class="titulo">Mubook</h2>
     <p class="frase">Seu jogo, sua quadra, sua reserva!</p>
   </div>
+
   <div class="opitions">
     <a routerLink="/home"><i class="bi bi-house"></i> Home</a>
-    <a routerLink="/perfil">
-      <i class="bi bi-person"></i> Perfil
+    <a routerLink="/perfil"><i class="bi bi-person"></i> Perfil</a>
+    <a routerLink="/reservas"
+      ><i class="bi bi-calendar-check"></i> Quadro de Reservas</a
+    >
+
+    <!-- Quadras / Gestão de Quadras -->
+    <a routerLink="/vizualizar-quadras">
+      <i class="bi bi-book"></i>
+      {{ isAssociado() ? "Quadras" : "Gestão de Quadras" }}
     </a>
-    <a routerLink="/reservas"> <i class="bi bi-calendar-check"></i> Quadro de Reservas</a>
-    <a routerLink="/vizualizar-quadras"><i class="bi bi-book"></i> Gestão de Quadras</a>
-    <a routerLink="/gerenciar-usuarios" class="menu-item">
+
+    <!-- Admin only -->
+    <a *ngIf="isAdmin()" routerLink="/gerenciar-usuarios" class="menu-item">
       <i class="bi bi-people"></i> Gerenciar Usuários
     </a>
-<!--    <a routerLink="/gerenciar-usuarios" class="menu-item" (click)="toggleSubmenu($event)">-->
-<!--      <i class="bi bi-people"></i> Gerenciar Usuários-->
-<!--    </a>-->
-<!--    <div class="submenu">-->
-<!--      <a routerLink="/menu">Administradores</a>-->
-<!--      <a routerLink="/menu">Sócios</a>-->
-<!--    </div>-->
-    <a routerLink=""><i class="bi bi-clock"></i> Definição de Horários</a>
+    <a *ngIf="isAdmin()" routerLink="">
+      <i class="bi bi-clock"></i> Definição de Horários
+    </a>
   </div>
 </div>

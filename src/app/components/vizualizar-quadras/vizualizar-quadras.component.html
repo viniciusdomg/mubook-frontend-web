@@ -12,14 +12,19 @@
         class="border border-gray-300 rounded px-4 py-2 w-[280px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6D71FF]"
       >
         <option value="0" disabled selected>Selecione o tipo de quadra</option>
-        <option *ngFor="let tipo of tipos" [value]="tipo.id">{{ tipo.nome }}</option>
+        <option *ngFor="let tipo of tipos" [value]="tipo.id">
+          {{ tipo.nome }}
+        </option>
         <option value="0">Todas</option>
       </select>
 
       <label class="text-lg text-gray-700 m-0">Buscar por ID:</label>
       <div class="relative w-40">
         <!-- Prefixo visual -->
-        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">#</span>
+        <span
+          class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+          >#</span
+        >
 
         <input
           type="number"
@@ -38,9 +43,8 @@
           <i class="bi bi-search text-white"></i>
         </button>
       </div>
-
     </div>
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="isAdmin()">
       <button
         (click)="openModalCreate()"
         class="bg-[var(--color-primary)] text-white px-4 py-2 rounded"
@@ -50,9 +54,17 @@
     </div>
   </div>
 
-  <div class="flex items-center justify-center gap-6 mb-[80px]"  *ngIf="items && items.length > 0; else noQuadras">
-
-    <button *ngIf="items.length > 1" (click)="goPrev()" class="p-2 bg-transparent rounded hover:!bg-[var(--color-section-bg)]">←</button>
+  <div
+    class="flex items-center justify-center gap-6 mb-[80px]"
+    *ngIf="items && items.length > 0; else noQuadras"
+  >
+    <button
+      *ngIf="items.length > 1"
+      (click)="goPrev()"
+      class="p-2 bg-transparent rounded hover:!bg-[var(--color-section-bg)]"
+    >
+      ←
+    </button>
     <!-- Card anterior -->
     <div
       *ngIf="items.length > 1"
@@ -60,16 +72,24 @@
       (click)="setActive(prevIndex())"
     >
       <div class="p-2 flex flex-col justify-center">
-        <p style="font-size: 12px; margin-bottom: 55px;"><strong>Cap. Máxima:</strong> {{ items[prevIndex()].quantidadeMaxima }}</p>
-        <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[prevIndex()].tipoQuadra!.nome }}</p>
-        <p style="font-size: 9px;"><strong>Nome:</strong> {{ items[prevIndex()].nome }}</p>
+        <p style="font-size: 12px; margin-bottom: 55px">
+          <strong>Cap. Máxima:</strong>
+          {{ items[prevIndex()].quantidadeMaxima }}
+        </p>
+        <p style="font-size: 12px; margin-bottom: 4px">
+          <strong>Tipo:</strong> {{ items[prevIndex()].tipoQuadra!.nome }}
+        </p>
+        <p style="font-size: 9px">
+          <strong>Nome:</strong> {{ items[prevIndex()].nome }}
+        </p>
       </div>
       <img
         [src]="items[prevIndex()].foto_url"
         alt="Imagem"
         class="w-[100px] h-full object-cover rounded-r"
       />
-    </div>'
+    </div>
+    '
 
     <!-- Card ativo -->
     <div
@@ -77,13 +97,17 @@
       class="w-[680px] h-[370px] bg-white border border-red-500 shadow-lg flex cursor-default transition"
     >
       <div class="p-6 flex flex-col justify-start text-lg h-full">
-        <p style="margin-bottom: 165px;" class="text-sm">
-          <strong>Capacidade Máxima:</strong> {{ items[activeIndex].quantidadeMaxima }}
+        <p style="margin-bottom: 165px" class="text-sm">
+          <strong>Capacidade Máxima:</strong>
+          {{ items[activeIndex].quantidadeMaxima }}
         </p>
         <p class="text-2xl">
-          <strong>Tipo da Quadra:</strong> {{ items[activeIndex].tipoQuadra!.nome }}
+          <strong>Tipo da Quadra:</strong>
+          {{ items[activeIndex].tipoQuadra!.nome }}
         </p>
-        <p class="text-1xl"><strong>Nome:</strong> {{ items[activeIndex].nome }}</p>
+        <p class="text-1xl">
+          <strong>Nome:</strong> {{ items[activeIndex].nome }}
+        </p>
       </div>
       <img
         [src]="items[activeIndex].foto_url"
@@ -99,9 +123,16 @@
       (click)="setActive(nextIndex())"
     >
       <div class="p-2 flex flex-col justify-center">
-        <p style="font-size: 12px; margin-bottom: 55px;"><strong>Cap. Máxima:</strong> {{ items[nextIndex()].quantidadeMaxima }}</p>
-        <p style="font-size: 12px; margin-bottom: 4px;"><strong>Tipo:</strong> {{ items[nextIndex()].tipoQuadra!.nome }}</p>
-        <p style="font-size: 9px;"><strong>Nome:</strong> {{ items[nextIndex()].nome }}</p>
+        <p style="font-size: 12px; margin-bottom: 55px">
+          <strong>Cap. Máxima:</strong>
+          {{ items[nextIndex()].quantidadeMaxima }}
+        </p>
+        <p style="font-size: 12px; margin-bottom: 4px">
+          <strong>Tipo:</strong> {{ items[nextIndex()].tipoQuadra!.nome }}
+        </p>
+        <p style="font-size: 9px">
+          <strong>Nome:</strong> {{ items[nextIndex()].nome }}
+        </p>
       </div>
       <img
         [src]="items[nextIndex()].foto_url"
@@ -110,7 +141,13 @@
       />
     </div>
 
-    <button *ngIf="items.length > 1" (click)="goNext()" class="p-2 bg-transparent rounded hover:!bg-[var(--color-section-bg)]">→</button>
+    <button
+      *ngIf="items.length > 1"
+      (click)="goNext()"
+      class="p-2 bg-transparent rounded hover:!bg-[var(--color-section-bg)]"
+    >
+      →
+    </button>
   </div>
 
   <ng-template #noQuadras>
@@ -123,46 +160,63 @@
 
   <hr class="border-t border-gray-300 w-full m-16" />
 
-  <table class="min-w-[1200px] border shadow-lg border-gray-200 mx-auto mt-[80px]">
+  <table
+    class="min-w-[1200px] border shadow-lg border-gray-200 mx-auto mt-[80px]"
+    *ngIf="isAdmin()"
+  >
     <thead class="bg-gray-100">
-    <tr>
-      <th class="p-2 text-center w-[400px]">Tipo Quadra</th>
-      <th class="p-2 text-center w-[200px]">Quantidade Máx</th>
-      <th class="p-2 text-center">ID</th>
-      <th class="p-2 text-center w-[200px]">Ações</th>
-    </tr>
+      <tr>
+        <th class="p-2 text-center w-[400px]">Tipo Quadra</th>
+        <th class="p-2 text-center w-[200px]">Quantidade Máx</th>
+        <th class="p-2 text-center">ID</th>
+        <th class="p-2 text-center w-[200px]">Ações</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let quadra of quadrasPage?.content" class="border-b">
-      <td class="p-2 text-center">{{ quadra.nome }}</td>
-      <td class="p-2 text-center">{{ quadra.quantidadeMaxima }}</td>
-      <td class="p-2 text-center">#{{ quadra.id }}</td>
-      <td class="p-2 flex gap-2 justify-center">
-        <button class="bg-[var(--color-primary)] p-2 rounded text-white hover:opacity-70">
-          <i class="bi bi-pencil"></i>
-        </button>
-        <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(quadra.id)">
-          <i class="bi bi-trash"></i>
-        </button>
-      </td>
-    </tr>
-    <tr *ngIf="!quadrasPage?.content || (quadrasPage?.content?.length ?? 0) === 0">
-      <td colspan="5" class="p-4 text-center text-gray-500 italic">
-        Nenhuma quadra cadastrada
-      </td>
-    </tr>
+      <tr *ngFor="let quadra of quadrasPage?.content" class="border-b">
+        <td class="p-2 text-center">{{ quadra.nome }}</td>
+        <td class="p-2 text-center">{{ quadra.quantidadeMaxima }}</td>
+        <td class="p-2 text-center">#{{ quadra.id }}</td>
+        <td class="p-2 flex gap-2 justify-center">
+          <button
+            class="bg-[var(--color-primary)] p-2 rounded text-white hover:opacity-70"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button
+            class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70"
+            (click)="deleteOne(quadra.id)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr
+        *ngIf="
+          !quadrasPage?.content || (quadrasPage?.content?.length ?? 0) === 0
+        "
+      >
+        <td colspan="5" class="p-4 text-center text-gray-500 italic">
+          Nenhuma quadra cadastrada
+        </td>
+      </tr>
     </tbody>
   </table>
 
-  <div class="w-[1200px] mx-auto flex justify-between mt-4 mb-5">
+  <div
+    class="w-[1200px] mx-auto flex justify-between mt-4 mb-5"
+    *ngIf="isAdmin()"
+  >
     <button
       (click)="prevPage()"
       class="px-3 py-1 border rounded"
       [disabled]="!quadrasPage || quadrasPage.first"
       [ngClass]="{
-      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !quadrasPage || quadrasPage.first,
-      'hover:bg-gray-100': quadrasPage && !quadrasPage.first
-    }">
+        'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300':
+          !quadrasPage || quadrasPage.first,
+        'hover:bg-gray-100': quadrasPage && !quadrasPage.first
+      }"
+    >
       Anterior
     </button>
 
@@ -171,9 +225,11 @@
       class="px-3 py-1 border rounded"
       [disabled]="!quadrasPage || quadrasPage.last"
       [ngClass]="{
-      'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300': !quadrasPage || quadrasPage.last,
-      'hover:bg-gray-100': quadrasPage && !quadrasPage.last
-    }">
+        'bg-gray-200 text-gray-400 cursor-not-allowed border-gray-300':
+          !quadrasPage || quadrasPage.last,
+        'hover:bg-gray-100': quadrasPage && !quadrasPage.last
+      }"
+    >
       Próximo
     </button>
   </div>
@@ -196,7 +252,6 @@
       <h2 class="text-xl font-semibold mb-4 text-center">Nova Quadra</h2>
 
       <form (ngSubmit)="createQuadra()">
-
         <div class="mb-4">
           <div
             class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-[var(--color-primary)] cursor-pointer transition relative"
@@ -210,17 +265,21 @@
               class="hidden"
             />
 
-            <img *ngIf="request.foto_url"
-                 [src]="request.foto_url"
-                 alt="Preview da imagem"
-                 class="w-full h-auto max-h-48 object-contain rounded mb-2" />
+            <img
+              *ngIf="request.foto_url"
+              [src]="request.foto_url"
+              alt="Preview da imagem"
+              class="w-full h-auto max-h-48 object-contain rounded mb-2"
+            />
 
             <ng-container *ngIf="!request.foto_url">
               <i class="bi bi-image text-3xl text-gray-400"></i>
               <span class="text-gray-500 mt-2">Selecione a imagem</span>
             </ng-container>
 
-            <span class="text-gray-700 mt-2 text-sm" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+            <span class="text-gray-700 mt-2 text-sm" *ngIf="selectedFileName">{{
+              selectedFileName
+            }}</span>
           </div>
         </div>
 
@@ -235,7 +294,9 @@
               required
               class="border rounded w-full pl-11 pr-3 py-2"
             />
-            <div class="absolute left-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded">
+            <div
+              class="absolute left-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded"
+            >
               <i class="bi bi-person text-white"></i>
             </div>
           </div>
@@ -252,7 +313,9 @@
               required
               class="border rounded w-full pl-11 pr-3 py-2"
             />
-            <div class="absolute left-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded">
+            <div
+              class="absolute left-0 top-0 h-full w-10 flex items-center justify-center bg-[var(--color-primary)] rounded"
+            >
               <i class="bi bi-card-text text-white"></i>
             </div>
           </div>
@@ -293,7 +356,8 @@
                 (click)="createTipoQuadra()"
                 class="px-3 py-2 hover:bg-gray-200 cursor-pointer"
               >
-                <i class="bi bi-check-lg text-green-500"></i> Esse tipo não existe, adicionar "{{ tipoText }}"
+                <i class="bi bi-check-lg text-green-500"></i> Esse tipo não
+                existe, adicionar "{{ tipoText }}"
               </li>
             </ul>
           </div>
@@ -303,6 +367,7 @@
           <button
             type="submit"
             class="bg-[var(--color-primary)] text-white px-4 py-2 rounded"
+            [disabled]="!isAdmin()"
           >
             Criar nova Quadra
           </button>

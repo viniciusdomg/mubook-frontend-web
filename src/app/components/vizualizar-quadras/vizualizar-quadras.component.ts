@@ -14,17 +14,25 @@ import {TipoQuadraService} from '../../services/tipo.quadra.service';
 import {QuadraResponseModel} from '../../models/quadra/quadra.response.model';
 import {USER_ROLES} from '../../models/gerenciar-usuarios/usuario.request.model';
 import {UploadService} from '../../services/upload.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
-  selector: 'app-vizualizar-quadras',
-  imports: [FormsModule, NgForOf, NgIf, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatOptionModule, NgClass],
-  templateUrl: './vizualizar-quadras.component.html',
-  styleUrl: './vizualizar-quadras.component.css'
+  selector: 'app-vizualizar-quadras',
+  imports: [
+    FormsModule, NgForOf, NgIf,
+    MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatOptionModule, NgClass
+  ],
+  templateUrl: './vizualizar-quadras.component.html',
+  styleUrl: './vizualizar-quadras.component.css'
 })
 export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
 
-  constructor(private service: QuadraService, private tipoService: TipoQuadraService,
-              private uploadService: UploadService) {}
+  constructor(
+    private service: QuadraService,
+    private tipoService: TipoQuadraService,
+    private uploadService: UploadService,
+    private authService: AuthService // INJETAR O SERVIÇO DE AUTH
+  ) {}
 
   request: Partial<QuadraRequest> = {
     nome: '',
@@ -62,17 +70,27 @@ export class VizualizarQuadrasComponent implements OnInit, OnDestroy {
   activeIndex = 0;
   private interval: any;
 
-  ngOnInit() {
-    this.loadQuadras()
-    this.loadTipos();
-    this.interval = setInterval(() => {
-      this.goNext();
-    }, 5000);
-  }
+  userRole: string | null = null;
 
-  ngOnDestroy() {
-    clearInterval(this.interval);
-  }
+  ngOnInit() {
+    this.authService.getUserRole().subscribe({
+      next: role => this.userRole = role,
+      error: () => this.userRole = null
+    });
+
+    this.loadQuadras();
+    this.loadTipos();
+
+    this.interval = setInterval(() => this.goNext(), 5000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.interval);
+  }
+
+  isAdmin(): boolean {
+    return this.userRole === 'ROLE_ADMINISTRADOR';
+  }
 
   loadQuadras(){
     this.service.getQuadras(this.filters, this.offset, this.limit).subscribe({
