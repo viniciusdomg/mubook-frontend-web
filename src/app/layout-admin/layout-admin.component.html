@@ -1,1 +1,42 @@
-<p>layout-admin works!</p>
+<div class="bg-gray-50 min-h-screen py-10 px-6">
+  <div class="ml-[150px]">
+    <h1 class="text-2xl font-bold text-gray-800 mb-1">Home</h1>
+    <p class="text-sm text-gray-400 mb-10">
+      Olá, João. Bem vindo de volta ao Nome!
+    </p>
+
+    <div class="space-y-6 max-w-sm">
+      <div class="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+        <div class="w-12 h-12 bg-indigo-100 rounded-full"></div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">
+            {{ totalAdministradores$ | async }}
+          </h2>
+          <p class="text-gray-500 text-sm">Administradores</p>
+          <!-- Indicador de crescimento removido -->
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+        <div class="w-12 h-12 bg-indigo-100 rounded-full"></div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">
+            {{ totalSocios$ | async }}
+          </h2>
+          <p class="text-gray-500 text-sm">Sócios</p>
+          <!-- Indicador de crescimento removido -->
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+        <div class="w-12 h-12 bg-indigo-100 rounded-full"></div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">
+            {{ totalQuadras$ | async }}
+          </h2>
+          <p class="text-gray-500 text-sm">Total de Quadras</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
