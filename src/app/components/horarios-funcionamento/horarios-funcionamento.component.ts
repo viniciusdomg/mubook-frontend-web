@@ -54,7 +54,10 @@ export class HorariosFuncionamentoComponent implements OnInit {
 
   loadHorarios(){
     this.service.getPageHorarios(this.offset, this.limit).subscribe({
-      next: (data) => (this.horariosPage = data),
+      next: (data) => {
+        this.horariosPage = data
+        console.log(this.horariosPage.content)
+      },
       error: (err) => {
         void Swal.fire({
           icon: 'error',
@@ -161,4 +164,15 @@ export class HorariosFuncionamentoComponent implements OnInit {
       this.loadHorarios();
     }
   }
+
+  getDiasFormatados(dias: string): string {
+    if (!dias) return '';
+
+    return dias
+      .split('.')
+      .map((dia) => this.diasSemana.find((d) => d.valor === dia)?.label)
+      .filter(Boolean) // remove possíveis undefined
+      .join(', ');
+  }
+
 }

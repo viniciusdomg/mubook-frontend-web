@@ -74,13 +74,10 @@
     <tbody>
     <tr *ngFor="let horario of horariosPage?.content" class="border-b">
       <td class="p-2 text-center">{{ horario.tipoQuadra.nome }}</td>
-      <td class="p-2 text-center">{{ horario.diasSemana }}</td>
+      <td class="p-2 text-center">{{ getDiasFormatados(horario.diaSemana)}}</td>
       <td class="p-2 text-center">{{ horario.horarioAbertura }}</td>
       <td class="p-2 text-center">{{ horario.horarioFechamento }}</td>
       <td class="p-2 flex gap-2 justify-center">
-        <button class="bg-[var(--color-primary)] p-2 rounded text-white hover:opacity-70">
-          <i class="bi bi-pencil"></i>
-        </button>
         <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70" (click)="deleteOne(horario.id)">
           <i class="bi bi-trash"></i>
         </button>

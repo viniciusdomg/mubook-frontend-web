@@ -1,1 +1,207 @@
-<p>reservas-agendar works!</p>
+<div class="h-full ml-[40px]">
+  <h1 class="text-2xl font-semibold mt-4">Fazer Reserva</h1>
+
+  <div class="h-auto mt-[50px] flex">
+    <div class="w-full max-w-4xl bg-white shadow rounded-lg p-8">
+
+
+      <div class="flex flex-row gap-5">
+
+        <div class="py-6 mb-2">
+          <div>
+            <div class="relative flex gap-2">
+              <p class="m-0 block text-lg text-shadow-lg">Quadra: </p>
+              <p class="flex items-center text-gray-500 m-0 pt-0.5">{{reserva.quadra.nome}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="py-6 mb-2">
+          <div>
+            <div class="relative flex gap-2">
+              <p class="m-0 block text-lg text-shadow-lg">Horário: </p>
+              <p class="flex items-center text-gray-500 m-0 pt-0.5">{{extHora(reserva.dataHora)}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="py-6 mb-2">
+          <div>
+            <div class="relative flex gap-2">
+              <p class="m-0 block text-lg text-shadow-lg">Data: </p>
+              <p class="flex items-center text-gray-500 m-0 pt-0.5">{{extData(reserva.dataHora)}}</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <h2 class="text-2xl font-semibold mb-6">Convidados</h2>
+      <form class="grid grid-cols-1 md:grid-cols-1 gap-4" (ngSubmit)="agendar()">
+        <!-- CPF -->
+        <div>
+          <div class="w-[35%]">
+            <label class="text-sm font-medium text-gray-600 mb-1 block">CPF<span class="text-red-800">*</span></label>
+            <div class="relative">
+              <input type="text" name="cpf" [(ngModel)]="convidado.cpf"
+                     placeholder="00000000000"
+                     required
+                     class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+              />
+              <div class="absolute right-0 top-0 h-full w-10">
+                <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
+                  <i class="bi bi-credit-card-2-front text-white text-lg"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-row items-center gap-4 mt-4 w-full">
+
+            <div class="w-full">
+              <label class="text-sm font-medium text-gray-600 mb-1 block">Nome completo<span class="text-red-800">*</span></label>
+              <div class="relative">
+                <input type="text" name="nome" [(ngModel)]="convidado.nome"
+                placeholder="Nome completo"
+                required
+                class="w-full py-3 px-4 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+                />
+                <div class="absolute right-0 top-0 h-full w-10">
+                  <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
+                    <i class="bi bi-person text-white text-lg"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="w-full">
+              <label class="text-sm font-medium text-gray-600 mb-1 block">Email<span class="text-red-800">*</span></label>
+              <div class="relative">
+                <input type="email" name="email" [(ngModel)]="convidado.email"
+                placeholder="Email"
+                required
+                class="w-full py-3 px-4 pr-12 rounded text-sm bg-gray-100 border-none focus:outline-none placeholder-gray-400"
+                />
+                <div class="absolute right-0 top-0 h-full w-10">
+                  <div class="h-full w-full flex items-center justify-center px-4 bg-[var(--color-primary)] rounded">
+                    <i class="bi bi-envelope text-white text-lg"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="flex mt-3 col-span-2">
+          <button type="button" (click)="adicionarConvidado()"
+                  class="px-2 bg-[var(--color-primary)] text-white font-semibold py-2 rounded hover:bg-[var(--color-primary-hover)] transition"
+                  [disabled]="carregando">
+            Adicionar
+          </button>
+        </div>
+
+        <!-- Botão -->
+        <div *ngIf="!modoEdicao" class="flex justify-end col-span-2 mt-5">
+          <button type="submit"
+                  class="px-2 bg-[var(--color-primary)] text-white font-semibold py-3 rounded hover:bg-[var(--color-primary-hover)] transition"
+                  [disabled]="carregando">
+            Agendar
+          </button>
+        </div>
+
+        <div *ngIf="modoEdicao" class="flex justify-end col-span-2 mt-5">
+          <button type="button" (click)="salvarNovosConvidados()"
+                  class="px-2 bg-[var(--color-primary)] text-white font-semibold py-3 rounded hover:bg-[var(--color-primary-hover)] transition"
+                  [disabled]="carregando">
+            Salvar Alterações
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <div *ngIf="carregando" class="text-sm text-gray-500 flex items-center gap-2 mt-1">
+      <i class="bi bi-arrow-repeat animate-spin text-[var(--color-primary)]"></i>
+      <span>Buscando pessoa no banco...</span>
+    </div>
+  </div>
+
+
+  <hr *ngIf="convidados && convidados.length > 0" class="border-t border-gray-300 w-full mt-5" />
+
+  <div *ngIf="convidados && convidados.length > 0" class="mt-5">
+    <h2 class="text-2xl font-semibold mb-6">Novos Convidados</h2>
+    <table class="w-[80%] table-fixed border shadow-lg border-gray-200">
+      <thead class="bg-gray-100">
+      <tr>
+        <th class="p-2 text-center">CPF</th>
+        <th class="p-2 text-center">Nome Completo</th>
+        <th class="p-2 text-center">Email</th>
+        <th class="p-2 text-center">Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let convidado of convidados" class="border-b">
+        <td class="p-2 text-center">{{ convidado.cpf }}</td>
+        <td class="p-2 text-center">{{ convidado.nome }}</td>
+        <td class="p-2 text-center">{{ convidado.email}}</td>
+        <td class="p-2 flex gap-2 justify-center">
+          <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70"
+                  (click)="convidado.cpf && deleteLocalStorage(convidado.cpf)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <hr *ngIf="convidadosSalvos && convidadosSalvos.length > 0" class="border-t border-gray-300 w-full mt-5" />
+
+  <div *ngIf="convidadosSalvos && convidadosSalvos.length > 0" class="mt-5">
+    <h2 class="text-2xl font-semibold mb-4">Lista de Convidados</h2>
+    <div class="flex mb-3 ml-[68%]">
+      <button (click)="deleteSelected()"
+              class="bg-[var(--color-danger)] text-white px-4 py-2 rounded hover:bg-[var(--color-danger-hover)]">Excluir Selecionados
+      </button>
+    </div>
+    <table class="w-[80%] table-fixed border shadow-lg border-gray-200">
+      <thead class="bg-gray-100">
+      <tr>
+        <th class="p-2 w-12">
+          <input type="checkbox" (change)="selectAll($event)"
+                 [disabled]="!convidadosSalvos || convidadosSalvos.length === 0"
+          />
+        </th>
+        <th class="p-2 text-center">CPF</th>
+        <th class="p-2 text-center">Nome Completo</th>
+        <th class="p-2 text-center">Email</th>
+        <th class="p-2 text-center">Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let convidado of convidadosSalvos" class="border-b">
+        <td class="p-2 w-12">
+          <input type="checkbox" [checked]="selectedUserIds.includes(convidado.id)" (change)="toggleSelection(convidado.id)"/>
+        </td>
+        <td class="p-2 text-center">{{ convidado.pessoa.cpf }}</td>
+        <td class="p-2 text-center">{{ convidado.pessoa.nome }}</td>
+        <td class="p-2 text-center">{{ convidado.pessoa.email}}</td>
+        <td class="p-2 flex gap-2 justify-center">
+          <button class="bg-[var(--color-danger)] p-2 rounded text-white hover:opacity-70"
+                  (click)="deleteOne(convidado.id)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="h-[50px]"></div>
+
+</div>

@@ -10,6 +10,7 @@ import { VizualizarQuadrasComponent } from './components/vizualizar-quadras/vizu
 import { ReservasComponent } from './components/reservas/reservas.component';
 import {PerfilComponent} from './components/perfil/perfil.component';
 import {HorariosFuncionamentoComponent} from './components/horarios-funcionamento/horarios-funcionamento.component';
+import {ReservasAgendarComponent} from './components/reservas-agendar/reservas-agendar.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,7 @@ export const routes: Routes = [
       { path: 'vizualizar-quadras', component: VizualizarQuadrasComponent, canActivate: [AuthGuard]},
       { path: 'reservas', component: ReservasComponent, canActivate: [AuthGuard]},
       { path: 'definicao-horarios', component: HorariosFuncionamentoComponent, canActivate: [AuthGuard]},
+      { path: 'agendar-reserva', component: ReservasAgendarComponent, canActivate: [AuthGuard]},
       // { path: 'perfil', component: PerfilComponent },
     ]
   },

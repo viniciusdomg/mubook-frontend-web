@@ -88,9 +88,10 @@
       <div
         class="w-[260px] h-[190px] bg-white border border-red-500 shadow-lg flex flex-col items-center justify-center p-2 text-center text-green-600"
         [ngClass]="{
-          'border-red-500 text-green-600': isAtiva(reservasDisponiveis[activeIndex]),
-          'border-gray-400 text-gray-400': !isAtiva(reservasDisponiveis[activeIndex])
+          'border-red-500 text-green-600 cursor-pointer active:scale-95 hover:shadow-xl': isAtiva(reservasDisponiveis[activeIndex]),
+          'border-gray-400 text-gray-400 pointer-events-none opacity-70': !isAtiva(reservasDisponiveis[activeIndex])
         }"
+        (click)="isAtiva(reservasDisponiveis[activeIndex]) && agendarReserva()"
       >
         <h3 class="mb-2 font-bold text-lg">Quadra: {{ reservasDisponiveis[activeIndex].quadra.nome }}</h3>
         <p>Data: {{ extData(reservasDisponiveis[activeIndex].dataHora)}}</p>
@@ -150,45 +151,44 @@
   <hr class="border-t border-gray-300 w-full" />
   <p class="ml-[150px] text-2xl ">Histórico de Reservas</p>
 
-  <table class="table-auto w-full border border-gray-300 text-sm text-center mt-10">
+  <table class="table-auto w-full border shadow-lg border-gray-200 mx-auto mt-10">
     <thead class="bg-gray-100 text-gray-700">
       <tr>
-        <th class="px-4 py-2 border">Quadra</th>
-        <th class="px-4 py-2 border">Data</th>
-        <th class="px-4 py-2 border">Horário</th>
-        <th class="px-4 py-2 border">Status</th>
-        <th class="px-4 py-2 border">Ações</th>
+        <th class="px-4 py-2 text-center">Quadra</th>
+        <th class="px-4 py-2 text-center">Data</th>
+        <th class="px-4 py-2 text-center">Horário</th>
+        <th class="px-4 py-2 text-center">Status</th>
+        <th class="px-2 py-2 text-center">Ações</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let reserva of reservasDisponiveis">
-        <td class="px-4 py-2 border">{{ reserva.quadra }}</td>
-        <td class="px-4 py-2 border">{{ reserva.dataHora }}</td>
-        <td class="px-4 py-2 border">{{ reserva }}</td>
-        <td class="px-4 py-2 border">
-          <span
-            class="px-2 py-1 rounded text-white"
-            [ngClass]="{
-              'bg-green-500': isAtiva(reserva),
-              'bg-gray-400': !isAtiva(reserva)
-            }"
+      <tr *ngFor="let historico of pageHistoricoReservas?.content" class="border-b">
+        <td class="px-4 py-2 text-center">{{ historico.quadra.nome }}</td>
+        <td class="px-4 py-2 text-center">{{ extData(historico.dataHora) }}</td>
+        <td class="px-4 py-2 text-center">{{ extHora(historico.dataHora) }}</td>
+        <td class="px-4 py-2 text-center">{{ historico.status }}</td>
+        <td class="px-2 py-2 text-center w-[300px]">
+          <button
+            class="bg-transparent text-blue-400 px-3 py-1 rounded hover:text-blue-600 transition"
+            (click)="editarReserva(historico.id)"
           >
-            {{ isAtiva(reserva) ? 'Ativa' : 'Expirada' }}
-          </span>
+            Acompanhar
+          </button>
+          <button
+            class="bg-transparent text-red-400 px-3 py-1 rounded hover:text-red-600 transition"
+            (click)="cancelarReserva(historico.id)"
+          >
+            Cancelar
+          </button>
         </td>
-        <td class="px-4 py-2 border">
-          <button
-            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mr-2"
-          >
-            Editar
-          </button>
-          <button
-            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-          >
-            Excluir
-          </button>
+      </tr>
+      <tr *ngIf="!pageHistoricoReservas?.content || (pageHistoricoReservas?.content?.length ?? 0) === 0">
+        <td colspan="5" class="p-4 text-center text-gray-500 italic">
+          Nenhuma quadra cadastrada
         </td>
       </tr>
     </tbody>
   </table>
+
+  <div class="h-[30px]"></div>
 </div>
